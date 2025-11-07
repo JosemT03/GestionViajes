@@ -31,6 +31,10 @@
             lblBienvenida = new Label();
             btnCerrarSesion = new Button();
             btnGestionarUsuarios = new Button();
+            btnGestionarChoferes = new Button();
+            btnGestionarVehiculos = new Button();
+            BtnPedidos = new Button();
+            BtnHistorial = new Button();
             SuspendLayout();
             // 
             // lblBienvenida
@@ -54,7 +58,7 @@
             // 
             // btnGestionarUsuarios
             // 
-            btnGestionarUsuarios.Location = new Point(22, 149);
+            btnGestionarUsuarios.Location = new Point(28, 138);
             btnGestionarUsuarios.Name = "btnGestionarUsuarios";
             btnGestionarUsuarios.Size = new Size(203, 23);
             btnGestionarUsuarios.TabIndex = 2;
@@ -62,11 +66,56 @@
             btnGestionarUsuarios.UseVisualStyleBackColor = true;
             btnGestionarUsuarios.Click += btnGestionarUsuarios_Click;
             // 
+            // btnGestionarChoferes
+            // 
+            btnGestionarChoferes.Location = new Point(28, 202);
+            btnGestionarChoferes.Name = "btnGestionarChoferes";
+            btnGestionarChoferes.Size = new Size(194, 23);
+            btnGestionarChoferes.TabIndex = 3;
+            btnGestionarChoferes.Text = "Gestionar Choferes";
+            btnGestionarChoferes.UseVisualStyleBackColor = true;
+            btnGestionarChoferes.Click += btnGestionarChoferes_Click;
+            // 
+            // btnGestionarVehiculos
+            // 
+            btnGestionarVehiculos.Font = new Font("Segoe UI", 10F);
+            btnGestionarVehiculos.Location = new Point(28, 265);
+            btnGestionarVehiculos.Name = "btnGestionarVehiculos";
+            btnGestionarVehiculos.Size = new Size(188, 40);
+            btnGestionarVehiculos.TabIndex = 4;
+            btnGestionarVehiculos.Text = "Gestionar Vehículos";
+            btnGestionarVehiculos.UseVisualStyleBackColor = true;
+            btnGestionarVehiculos.Click += btnGestionarVehiculos_Click;
+            // 
+            // BtnPedidos
+            // 
+            BtnPedidos.Location = new Point(39, 330);
+            BtnPedidos.Name = "BtnPedidos";
+            BtnPedidos.Size = new Size(177, 23);
+            BtnPedidos.TabIndex = 5;
+            BtnPedidos.Text = "Gestionar Pedido";
+            BtnPedidos.UseVisualStyleBackColor = true;
+            BtnPedidos.Click += BtnPedidos_Click;
+            // 
+            // BtnHistorial
+            // 
+            BtnHistorial.Location = new Point(39, 79);
+            BtnHistorial.Name = "BtnHistorial";
+            BtnHistorial.Size = new Size(143, 23);
+            BtnHistorial.TabIndex = 6;
+            BtnHistorial.Text = "Historial";
+            BtnHistorial.UseVisualStyleBackColor = true;
+            BtnHistorial.Click += BtnHistorial_Click;
+            // 
             // FormAdministrador
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(BtnHistorial);
+            Controls.Add(BtnPedidos);
+            Controls.Add(btnGestionarVehiculos);
+            Controls.Add(btnGestionarChoferes);
             Controls.Add(btnGestionarUsuarios);
             Controls.Add(btnCerrarSesion);
             Controls.Add(lblBienvenida);
@@ -82,5 +131,9 @@
         private Label lblBienvenida;
         private Button btnCerrarSesion;
         private Button btnGestionarUsuarios;
+        private Button btnGestionarChoferes;
+        private Button btnGestionarVehiculos;
+        private Button BtnPedidos;
+        private Button BtnHistorial;
     }
 }
