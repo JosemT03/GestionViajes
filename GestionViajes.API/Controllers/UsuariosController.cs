@@ -20,7 +20,11 @@ namespace GestionViajes.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            return await _context.Usuarios.ToListAsync();
+            var usuarios = await _context.Usuarios
+         .Include(u => u.Chofer)
+         .ToListAsync();
+
+            return Ok(usuarios);
         }
 
         // GET: api/Usuarios/5
@@ -33,6 +37,7 @@ namespace GestionViajes.API.Controllers
                 return NotFound();
             }
             return usuario;
+            
         }
 
         // POST: api/Usuarios
@@ -49,28 +54,17 @@ namespace GestionViajes.API.Controllers
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
             if (id != usuario.Id)
-            {
                 return BadRequest();
-            }
 
-            _context.Entry(usuario).State = EntityState.Modified;
+            var usuarioExistente = await _context.Usuarios.FindAsync(id);
+            if (usuarioExistente == null)
+                return NotFound();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Usuarios.Any(e => e.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            usuarioExistente.NombreUsuario = usuario.NombreUsuario;
+            usuarioExistente.Contraseña = usuario.Contraseña;
+            usuarioExistente.Rol = usuario.Rol;
 
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 

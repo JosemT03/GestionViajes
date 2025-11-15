@@ -4,6 +4,7 @@ using GestionViajes.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionViajes.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251114195125_MakeUsuarioIdNullable")]
+    partial class MakeUsuarioIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,14 +48,13 @@ namespace GestionViajes.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UsuarioId")
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UsuarioId")
-                        .IsUnique()
-                        .HasFilter("[UsuarioId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Choferes");
                 });
@@ -195,7 +197,8 @@ namespace GestionViajes.API.Migrations
 
             modelBuilder.Entity("GestionViajes.Shared.Entidades.Usuario", b =>
                 {
-                    b.Navigation("Chofer");
+                    b.Navigation("Chofer")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

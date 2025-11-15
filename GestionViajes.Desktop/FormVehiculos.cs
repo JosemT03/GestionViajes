@@ -23,6 +23,8 @@ namespace GestionViajes.Desktop
             BtnEditar.Click += BtnEditar_Click;
             BtnEliminar.Click += BtnEliminar_Click;
             BtnCerrar.Click += BtnCerrar_Click;
+            BtnRefrescar.Click += async (s, e) => await CargarVehiculos();
+
         }
 
         private async void FormVehiculos_Load(object sender, EventArgs e)
@@ -35,46 +37,66 @@ namespace GestionViajes.Desktop
             using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
             var response = await client.GetAsync("/api/Vehiculos");
 
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var vehiculos = JsonConvert.DeserializeObject<List<Vehiculo>>(json);
-                dgvVehiculos.DataSource = null;
-                dgvVehiculos.DataSource = vehiculos;
-                
-            }
-            else
+            if (!response.IsSuccessStatusCode)
             {
                 MessageBox.Show("Error al cargar vehículos.");
+                return;
             }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var vehiculos = JsonConvert.DeserializeObject<List<Vehiculo>>(json);
+
+            // Transformar en DTO para evitar columnas raras en el DGV
+            var lista = vehiculos.Select(v => new VehiculoDTO
+            {
+                Id = v.Id,
+                Patente = v.Patente,
+                Marca = v.Marca,
+                Modelo = v.Modelo,
+                Año = v.Año,
+                Disponible = v.Disponible,
+                Kilometraje = v.Kilometraje
+            }).ToList();
+
+            dgvVehiculos.DataSource = null;
+            dgvVehiculos.DataSource = lista;
         }
 
         private async void BtnAgregar_Click(object sender, EventArgs e)
         {
             var form = new FormAgregarEditarVehiculo();
+
             if (form.ShowDialog() == DialogResult.OK)
             {
+                var v = form.Vehiculo;
+
+                var request = new
+                {
+                    v.Patente,
+                    v.Marca,
+                    v.Modelo,
+                    Año = v.Año,
+                    v.Disponible,
+                    v.Kilometraje
+                };
+
                 using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-                var json = JsonConvert.SerializeObject(form.Vehiculo);
+                var json = JsonConvert.SerializeObject(request);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync("https://localhost:7083/api/Vehiculos", content);
+
+                var response = await client.PostAsync("/api/Vehiculos", content);
 
                 if (response.IsSuccessStatusCode)
-                {
                     await CargarVehiculos();
-                }
                 else
-                {
                     MessageBox.Show("Error al agregar el vehículo.");
-                }
             }
         }
 
         private async void BtnEditar_Click(object sender, EventArgs e)
         {
-            if (dgvVehiculos.CurrentRow?.DataBoundItem is Vehiculo seleccionado)
+            if (dgvVehiculos.CurrentRow?.DataBoundItem is VehiculoDTO seleccionado)
             {
-                // Crear una copia segura del objeto para evitar modificar accidentalmente el DataGridView
                 var copia = new Vehiculo
                 {
                     Id = seleccionado.Id,
@@ -82,25 +104,37 @@ namespace GestionViajes.Desktop
                     Marca = seleccionado.Marca,
                     Modelo = seleccionado.Modelo,
                     Año = seleccionado.Año,
-                    Disponible = seleccionado.Disponible
+                    Disponible = seleccionado.Disponible,
+                    Kilometraje = seleccionado.Kilometraje
                 };
 
                 var form = new FormAgregarEditarVehiculo(copia);
+
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    var v = form.Vehiculo;
+
+                    var request = new
+                    {
+                        v.Id,
+                        v.Patente,
+                        v.Marca,
+                        v.Modelo,
+                        Año = v.Año,
+                        v.Disponible,
+                        v.Kilometraje
+                    };
+
                     using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-                    var json = JsonConvert.SerializeObject(form.Vehiculo);
+                    var json = JsonConvert.SerializeObject(request);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    var response = await client.PutAsync($"https://localhost:7083/api/Vehiculos/{form.Vehiculo.Id}", content);
+                    var response = await client.PutAsync($"/api/Vehiculos/{v.Id}", content);
+
                     if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                    {
                         await CargarVehiculos();
-                    }
                     else
-                    {
                         MessageBox.Show("Error al actualizar.");
-                    }
                 }
             }
             else

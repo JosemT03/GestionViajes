@@ -36,6 +36,9 @@
             cmbRol = new ComboBox();
             btnGuardar = new Button();
             btnCancelar = new Button();
+            lblChofer = new Label();
+            cmbChofer = new ComboBox();
+            backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             SuspendLayout();
             // 
             // label1
@@ -108,11 +111,31 @@
             btnCancelar.UseVisualStyleBackColor = true;
             btnCancelar.Click += btnCancelar_Click;
             // 
+            // lblChofer
+            // 
+            lblChofer.AutoSize = true;
+            lblChofer.Location = new Point(324, 164);
+            lblChofer.Name = "lblChofer";
+            lblChofer.Size = new Size(109, 15);
+            lblChofer.TabIndex = 8;
+            lblChofer.Text = "Seleccionar Chofer:";
+            // 
+            // cmbChofer
+            // 
+            cmbChofer.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbChofer.FormattingEnabled = true;
+            cmbChofer.Location = new Point(454, 166);
+            cmbChofer.Name = "cmbChofer";
+            cmbChofer.Size = new Size(121, 23);
+            cmbChofer.TabIndex = 9;
+            // 
             // FormUsuarioDetalle
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(cmbChofer);
+            Controls.Add(lblChofer);
             Controls.Add(btnCancelar);
             Controls.Add(btnGuardar);
             Controls.Add(cmbRol);
@@ -138,5 +161,8 @@
         private ComboBox cmbRol;
         private Button btnGuardar;
         private Button btnCancelar;
+        private Label lblChofer;
+        private ComboBox cmbChofer;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

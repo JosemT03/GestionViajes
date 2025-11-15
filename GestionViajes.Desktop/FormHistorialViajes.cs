@@ -39,6 +39,7 @@ namespace GestionViajes.Desktop
         {
             cmbOpciones.Visible = true;
             dtpMes.Visible = false;
+
             cmbOpciones.DataSource = null;
             cmbOpciones.Items.Clear();
 
@@ -51,32 +52,28 @@ namespace GestionViajes.Desktop
                 if (tipo == "Chofer")
                 {
                     var response = await client.GetAsync("/api/Choferes");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var json = await response.Content.ReadAsStringAsync();
-                        var choferes = JsonConvert.DeserializeObject<List<Chofer>>(json);
-                        cmbOpciones.DataSource = choferes;
-                        cmbOpciones.DisplayMember = "Nombre";
-                        cmbOpciones.ValueMember = "Id";
-                    }
+                    var json = await response.Content.ReadAsStringAsync();
+                    var choferes = JsonConvert.DeserializeObject<List<Chofer>>(json);
+
+                    cmbOpciones.DataSource = choferes;
+                    cmbOpciones.DisplayMember = "NombreCompleto";  // ✔ CORRECTO
+                    cmbOpciones.ValueMember = "Id";
                 }
                 else if (tipo == "Vehículo")
                 {
                     var response = await client.GetAsync("/api/Vehiculos");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var json = await response.Content.ReadAsStringAsync();
-                        var vehiculos = JsonConvert.DeserializeObject<List<Vehiculo>>(json);
-                        cmbOpciones.DataSource = vehiculos;
-                        cmbOpciones.DisplayMember = "Patente";
-                        cmbOpciones.ValueMember = "Id";
-                    }
+                    var json = await response.Content.ReadAsStringAsync();
+                    var vehiculos = JsonConvert.DeserializeObject<List<Vehiculo>>(json);
+
+                    cmbOpciones.DataSource = vehiculos;
+                    cmbOpciones.DisplayMember = "Patente"; // ✔ CORRECTO
+                    cmbOpciones.ValueMember = "Id";
                 }
                 else if (tipo == "Mes")
                 {
                     cmbOpciones.Visible = false;
                     dtpMes.Visible = true;
-                    dtpMes.Format = DateTimePickerFormat.Custom;
+
                     dtpMes.CustomFormat = "MM/yyyy";
                     dtpMes.ShowUpDown = true;
                 }
@@ -90,10 +87,8 @@ namespace GestionViajes.Desktop
         private async void btnBuscar_Click(object sender, EventArgs e)
         {
             using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-            string filtro = cmbFiltroTipo.SelectedItem?.ToString();
-            string url = "/api/Pedidos";
 
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync("/api/Pedidos");
             if (!response.IsSuccessStatusCode)
             {
                 MessageBox.Show("Error al cargar historial.");
@@ -101,22 +96,30 @@ namespace GestionViajes.Desktop
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var pedidos = JsonConvert.DeserializeObject<List<Pedido>>(json);
+
+            // Trae objetos dinámicos desde la API
+            var pedidos = JsonConvert.DeserializeObject<List<dynamic>>(json);
+
+            string filtro = cmbFiltroTipo.SelectedItem?.ToString();
 
             if (filtro == "Chofer" && cmbOpciones.SelectedValue is int choferId)
-                pedidos = pedidos.Where(p => p.ChoferId == choferId).ToList();
+                pedidos = pedidos.Where(p => (int?)p.choferId == choferId).ToList();
 
             if (filtro == "Vehículo" && cmbOpciones.SelectedValue is int vehiculoId)
-                pedidos = pedidos.Where(p => p.VehiculoId == vehiculoId).ToList();
+                pedidos = pedidos.Where(p => (int?)p.vehiculoId == vehiculoId).ToList();
 
             if (filtro == "Mes")
             {
-                var mesSeleccionado = dtpMes.Value;
-                pedidos = pedidos.Where(p => p.FechaEntrega.Month == mesSeleccionado.Month && p.FechaEntrega.Year == mesSeleccionado.Year).ToList();
+                var mes = dtpMes.Value.Month;
+                var año = dtpMes.Value.Year;
+
+                pedidos = pedidos.Where(p =>
+                    DateTime.Parse(p.fechaEntrega.ToString()).Month == mes &&
+                    DateTime.Parse(p.fechaEntrega.ToString()).Year == año
+                ).ToList();
             }
 
             dgvHistorial.DataSource = pedidos;
         }
-
     }
 }

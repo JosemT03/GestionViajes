@@ -20,19 +20,20 @@ namespace GestionViajes.API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u =>
-                    u.NombreUsuario == request.Usuario &&
-                    u.Contraseña == request.Contraseña); 
+     .Include(u => u.Chofer)
+     .FirstOrDefaultAsync(u =>
+         u.NombreUsuario == request.Usuario &&
+         u.Contraseña == request.Contraseña);
 
             if (usuario == null)
-            {
-                return Unauthorized("Usuario o contraseña incorrectos.");
-            }
+                return Unauthorized();
 
             return Ok(new
             {
                 Rol = usuario.Rol,
-                Nombre = usuario.NombreUsuario
+                Nombre = usuario.NombreUsuario,
+                UsuarioId = usuario.Id,
+                ChoferId = usuario.Chofer?.Id   // <<< AHORA FUNCIONA
             });
         }
     }

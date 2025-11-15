@@ -12,5 +12,9 @@ namespace GestionViajes.Shared.Entidades
         public string NombreUsuario { get; set; }
         public string Contraseña { get; set; }
         public string Rol { get; set; }
+
+        // Navegación 1 a 1
+        public Chofer? Chofer { get; set; } // también opcional
+
     }
 }

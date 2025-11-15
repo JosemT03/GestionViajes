@@ -35,6 +35,7 @@
             btnGestionarVehiculos = new Button();
             BtnPedidos = new Button();
             BtnHistorial = new Button();
+            btnInformeEstadistico = new Button();
             SuspendLayout();
             // 
             // lblBienvenida
@@ -107,11 +108,22 @@
             BtnHistorial.UseVisualStyleBackColor = true;
             BtnHistorial.Click += BtnHistorial_Click;
             // 
+            // btnInformeEstadistico
+            // 
+            btnInformeEstadistico.Location = new Point(355, 85);
+            btnInformeEstadistico.Name = "btnInformeEstadistico";
+            btnInformeEstadistico.Size = new Size(157, 23);
+            btnInformeEstadistico.TabIndex = 7;
+            btnInformeEstadistico.Text = "Informe Estadístico";
+            btnInformeEstadistico.UseVisualStyleBackColor = true;
+            btnInformeEstadistico.Click += btnInformeEstadistico_Click;
+            // 
             // FormAdministrador
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnInformeEstadistico);
             Controls.Add(BtnHistorial);
             Controls.Add(BtnPedidos);
             Controls.Add(btnGestionarVehiculos);
@@ -135,5 +147,6 @@
         private Button btnGestionarVehiculos;
         private Button BtnPedidos;
         private Button BtnHistorial;
+        private Button btnInformeEstadistico;
     }
 }

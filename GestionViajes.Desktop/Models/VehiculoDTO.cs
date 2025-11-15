@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace GestionViajes.Desktop.Models
 {
-    public class Chofer
+    public class VehiculoDTO
     {
         public int Id { get; set; }
-        public string NombreCompleto { get; set; }
-        public string Telefono { get; set; }
-        public string DNI { get; set; }
+        public string Patente { get; set; }
+        public string Marca { get; set; }
+        public string Modelo { get; set; }
+        public int Año { get; set; }
         public bool Disponible { get; set; }
-
-        public int? UsuarioId { get; set; }
-        public Usuario? Usuario { get; set; }
-
+        public int Kilometraje { get; set; }
     }
 }

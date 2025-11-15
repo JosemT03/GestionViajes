@@ -49,12 +49,27 @@ namespace GestionViajes.Desktop
 
         private async void BtnAgregarPedido_Click(object sender, EventArgs e)
         {
-            var form = new FormAgregarEditarPedido(); // Lo vamos a hacer después
+            var form = new FormAgregarEditarPedido();
+
             if (form.ShowDialog() == DialogResult.OK)
             {
+                var pedido = form.Pedido;
+
+                var request = new
+                {
+                    pedido.Provincia,
+                    pedido.Sucursal,
+                    pedido.NumeroPedido,
+                    pedido.FechaEntrega,
+                    pedido.Estado,
+                    pedido.ChoferId,
+                    pedido.VehiculoId
+                };
+
                 using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-                var json = JsonConvert.SerializeObject(form.Pedido);
+                var json = JsonConvert.SerializeObject(request);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
+
                 var response = await client.PostAsync("/api/Pedidos", content);
 
                 if (response.IsSuccessStatusCode)
@@ -81,17 +96,33 @@ namespace GestionViajes.Desktop
                 };
 
                 var form = new FormAgregarEditarPedido(copia);
+
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    var pedido = form.Pedido;
+
+                    var request = new
+                    {
+                        pedido.Id,
+                        pedido.Provincia,
+                        pedido.Sucursal,
+                        pedido.NumeroPedido,
+                        pedido.FechaEntrega,
+                        pedido.Estado,
+                        pedido.ChoferId,
+                        pedido.VehiculoId
+                    };
+
                     using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-                    var json = JsonConvert.SerializeObject(form.Pedido);
+                    var json = JsonConvert.SerializeObject(request);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    var response = await client.PutAsync($"/api/Pedidos/{form.Pedido.Id}", content);
+                    var response = await client.PutAsync($"/api/Pedidos/{pedido.Id}", content);
+
                     if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         await CargarPedidos();
                     else
-                        MessageBox.Show("Error al actualizar.");
+                        MessageBox.Show("Error al actualizar el pedido.");
                 }
             }
             else

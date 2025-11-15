@@ -4,6 +4,7 @@ using GestionViajes.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionViajes.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251114181923_actualizacion 3")]
+    partial class actualizacion3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,14 +48,13 @@ namespace GestionViajes.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UsuarioId")
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UsuarioId")
-                        .IsUnique()
-                        .HasFilter("[UsuarioId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Choferes");
                 });
@@ -185,17 +187,11 @@ namespace GestionViajes.API.Migrations
 
             modelBuilder.Entity("GestionViajes.Shared.Entidades.Chofer", b =>
                 {
-                    b.HasOne("GestionViajes.Shared.Entidades.Usuario", "Usuario")
-                        .WithOne("Chofer")
+                    b.HasOne("GestionViajes.Shared.Entidades.Usuario", null)
+                        .WithOne()
                         .HasForeignKey("GestionViajes.Shared.Entidades.Chofer", "UsuarioId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("GestionViajes.Shared.Entidades.Usuario", b =>
-                {
-                    b.Navigation("Chofer");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

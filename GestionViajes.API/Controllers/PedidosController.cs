@@ -16,12 +16,30 @@ namespace GestionViajes.API.Controllers
             _context = context;
         }
 
-        // GET: api/Pedidos
+        // ✅ GET: api/Pedidos (ahora devuelve ChoferNombre y VehiculoPatente)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pedido>>> GetPedidos()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<dynamic>>> GetPedidos()
         {
-            return await _context.Pedidos.ToListAsync();
+            var pedidos = await _context.Pedidos
+                .Include(p => p.Chofer)
+                .Include(p => p.Vehiculo)
+                .Select(p => new
+                {
+                    id = p.Id,
+                    provincia = p.Provincia,
+                    sucursal = p.Sucursal,
+                    numeroPedido = p.NumeroPedido,
+                    fechaEntrega = p.FechaEntrega,
+                    estado = p.Estado,
+                    chofer = p.Chofer != null ? p.Chofer.NombreCompleto : "Sin asignar",
+                    vehiculo = p.Vehiculo != null ? p.Vehiculo.Patente : "Sin asignar"
+                })
+                .ToListAsync();
+
+            return Ok(pedidos);
         }
+
 
         // GET: api/Pedidos/5
         [HttpGet("{id}")]
@@ -30,9 +48,7 @@ namespace GestionViajes.API.Controllers
             var pedido = await _context.Pedidos.FindAsync(id);
 
             if (pedido == null)
-            {
                 return NotFound();
-            }
 
             return pedido;
         }
@@ -52,9 +68,7 @@ namespace GestionViajes.API.Controllers
         public async Task<IActionResult> PutPedido(int id, Pedido pedido)
         {
             if (id != pedido.Id)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(pedido).State = EntityState.Modified;
 
@@ -65,9 +79,8 @@ namespace GestionViajes.API.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!_context.Pedidos.Any(e => e.Id == id))
-                {
                     return NotFound();
-                }
+
                 throw;
             }
 
@@ -80,9 +93,7 @@ namespace GestionViajes.API.Controllers
         {
             var pedido = await _context.Pedidos.FindAsync(id);
             if (pedido == null)
-            {
                 return NotFound();
-            }
 
             _context.Pedidos.Remove(pedido);
             await _context.SaveChangesAsync();

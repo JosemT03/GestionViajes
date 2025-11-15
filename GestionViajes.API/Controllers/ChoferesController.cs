@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestionViajes.API.Controllers
-{
+{ 
     [ApiController]
     [Route("api/[controller]")]
     public class ChoferesController : ControllerBase
@@ -20,7 +20,10 @@ namespace GestionViajes.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Chofer>>> GetChoferes()
         {
-            return await _context.Choferes.ToListAsync();
+            return await _context.Choferes
+         .Include(c => c.Usuario)  // ← importante
+         .ToListAsync();
+
         }
 
         // GET: api/Choferes/5
@@ -30,9 +33,7 @@ namespace GestionViajes.API.Controllers
             var chofer = await _context.Choferes.FindAsync(id);
 
             if (chofer == null)
-            {
                 return NotFound();
-            }
 
             return chofer;
         }
@@ -51,26 +52,21 @@ namespace GestionViajes.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutChofer(int id, Chofer chofer)
         {
+            // Validación básica
             if (id != chofer.Id)
-            {
                 return BadRequest();
-            }
 
-            _context.Entry(chofer).State = EntityState.Modified;
+            var choferExistente = await _context.Choferes.FindAsync(id);
+            if (choferExistente == null)
+                return NotFound();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Choferes.Any(e => e.Id == id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
+            choferExistente.UsuarioId = chofer.UsuarioId;
+            choferExistente.NombreCompleto = chofer.NombreCompleto;
+            choferExistente.DNI = chofer.DNI;
+            choferExistente.Telefono = chofer.Telefono;
+            choferExistente.Disponible = chofer.Disponible;
 
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -80,9 +76,7 @@ namespace GestionViajes.API.Controllers
         {
             var chofer = await _context.Choferes.FindAsync(id);
             if (chofer == null)
-            {
                 return NotFound();
-            }
 
             _context.Choferes.Remove(chofer);
             await _context.SaveChangesAsync();

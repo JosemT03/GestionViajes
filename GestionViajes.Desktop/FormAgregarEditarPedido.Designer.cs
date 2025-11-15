@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            txtProvincia = new TextBox();
             txtSucursal = new TextBox();
             txtNumeroPedido = new TextBox();
             dtpFechaEntrega = new DateTimePicker();
@@ -44,14 +43,8 @@
             label5 = new Label();
             label6 = new Label();
             label7 = new Label();
+            cmbProvincia = new ComboBox();
             SuspendLayout();
-            // 
-            // txtProvincia
-            // 
-            txtProvincia.Location = new Point(108, 20);
-            txtProvincia.Name = "txtProvincia";
-            txtProvincia.Size = new Size(100, 23);
-            txtProvincia.TabIndex = 0;
             // 
             // txtSucursal
             // 
@@ -182,11 +175,21 @@
             label7.TabIndex = 15;
             label7.Text = "Vehiculo";
             // 
+            // cmbProvincia
+            // 
+            cmbProvincia.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbProvincia.FormattingEnabled = true;
+            cmbProvincia.Location = new Point(115, 28);
+            cmbProvincia.Name = "cmbProvincia";
+            cmbProvincia.Size = new Size(150, 23);
+            cmbProvincia.TabIndex = 16;
+            // 
             // FormAgregarEditarPedido
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(cmbProvincia);
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(label5);
@@ -202,7 +205,6 @@
             Controls.Add(dtpFechaEntrega);
             Controls.Add(txtNumeroPedido);
             Controls.Add(txtSucursal);
-            Controls.Add(txtProvincia);
             Name = "FormAgregarEditarPedido";
             Text = "FormAgregarEditarPedido";
             Load += FormAgregarEditarPedido_Load;
@@ -211,8 +213,6 @@
         }
 
         #endregion
-
-        private TextBox txtProvincia;
         private TextBox txtSucursal;
         private TextBox txtNumeroPedido;
         private DateTimePicker dtpFechaEntrega;
@@ -228,5 +228,6 @@
         private Label label5;
         private Label label6;
         private Label label7;
+        private ComboBox cmbProvincia;
     }
 }

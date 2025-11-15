@@ -9,8 +9,9 @@ namespace GestionViajes.Desktop.Models
     public class Usuario
     {
         public int Id { get; set; }
-        public string NombreUsuario { get; set; }
-        public string Contraseña { get; set; }
-        public string Rol { get; set; }
+        public string NombreUsuario { get; set; } = string.Empty;
+        public string Contraseña { get; set; } = string.Empty;
+        public string Rol { get; set; } = "Chofer";
+        public Chofer? Chofer { get; set; }
     }
 }

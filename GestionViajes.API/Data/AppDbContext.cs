@@ -15,5 +15,19 @@ namespace GestionViajes.API.Data
         public DbSet<Vehiculo> Vehiculos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Entrega> Entregas { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Relación uno a uno entre Usuario y Chofer
+            modelBuilder.Entity<Usuario>()
+     .HasOne(u => u.Chofer)
+     .WithOne(c => c.Usuario)
+     .HasForeignKey<Chofer>(c => c.UsuarioId)
+     .IsRequired(false)                        // RELACIÓN OPCIONAL
+     .OnDelete(DeleteBehavior.SetNull);         // SI BORRO USUARIO, NO BORRO CHOFER
+
+        }
     }
 }

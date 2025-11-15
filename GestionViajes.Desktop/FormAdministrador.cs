@@ -17,6 +17,7 @@ namespace GestionViajes.Desktop
         public FormAdministrador(string nombreAdmin)
         {
             InitializeComponent();
+            btnInformeEstadistico.Click += btnInformeEstadistico_Click;
             btnGestionarChoferes.Click += btnGestionarChoferes_Click;
             btnGestionarUsuarios.Click += btnGestionarUsuarios_Click;
             _nombreAdmin = nombreAdmin;
@@ -65,6 +66,12 @@ namespace GestionViajes.Desktop
         {
             var form = new FormHistorialViajes();
             form.ShowDialog();
+        }
+
+        private void btnInformeEstadistico_Click(object sender, EventArgs e)
+        {
+            FormInformeEstadistico form = new FormInformeEstadistico();
+            form.ShowDialog(); // o form.Show(); si preferís que no sea modal
         }
     }
 }

@@ -10,5 +10,7 @@ namespace GestionViajes.Desktop.Models
     {
         public string Rol { get; set; }
         public string Nombre { get; set; }
+        public int UsuarioId { get; set; }
+        public int? ChoferId { get; set; }
     }
 }

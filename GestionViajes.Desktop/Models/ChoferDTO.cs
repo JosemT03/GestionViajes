@@ -4,19 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionViajes.Shared.Entidades
+namespace GestionViajes.Desktop.Models
 {
-    public class Chofer
+    public class ChoferDTO
     {
         public int Id { get; set; }
         public string NombreCompleto { get; set; }
         public string DNI { get; set; }
         public string Telefono { get; set; }
         public bool Disponible { get; set; }
-
-        // FK
-        public int? UsuarioId { get; set; }   // ✔ OPCIONAL
-        public Usuario? Usuario { get; set; } // ✔ OPCIONAL
-
+        public int? UsuarioId { get; set; }
     }
 }

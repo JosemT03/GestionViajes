@@ -33,15 +33,16 @@
             btnEditar = new Button();
             btnEliminar = new Button();
             btnCerrar = new Button();
+            btnRefrescar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvChoferes).BeginInit();
             SuspendLayout();
             // 
             // dgvChoferes
             // 
             dgvChoferes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvChoferes.Location = new Point(56, 52);
+            dgvChoferes.Location = new Point(12, 52);
             dgvChoferes.Name = "dgvChoferes";
-            dgvChoferes.Size = new Size(240, 150);
+            dgvChoferes.Size = new Size(600, 150);
             dgvChoferes.TabIndex = 0;
             // 
             // btnAgregar
@@ -84,11 +85,21 @@
             btnCerrar.UseVisualStyleBackColor = true;
             btnCerrar.Click += btnCerrar_Click;
             // 
+            // btnRefrescar
+            // 
+            btnRefrescar.Location = new Point(276, 234);
+            btnRefrescar.Name = "btnRefrescar";
+            btnRefrescar.Size = new Size(75, 23);
+            btnRefrescar.TabIndex = 5;
+            btnRefrescar.Text = "Refrescar";
+            btnRefrescar.UseVisualStyleBackColor = true;
+            // 
             // FormChoferes
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnRefrescar);
             Controls.Add(btnCerrar);
             Controls.Add(btnEliminar);
             Controls.Add(btnEditar);
@@ -108,5 +119,6 @@
         private Button btnEditar;
         private Button btnEliminar;
         private Button btnCerrar;
+        private Button btnRefrescar;
     }
 }

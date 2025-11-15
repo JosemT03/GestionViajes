@@ -21,111 +21,122 @@ namespace GestionViajes.Desktop
         private async void FormChoferes_Load(object sender, EventArgs e)
         {
             await CargarChoferes();
+            btnRefrescar.Click += async (s, e) => await CargarChoferes();
+
         }
 
         private async Task CargarChoferes()
         {
-            using (HttpClient client = new HttpClient())
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+            var response = await client.GetAsync("/api/Choferes");
+
+            if (!response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7083");
-                var response = await client.GetAsync("/api/Choferes");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    var choferes = JsonConvert.DeserializeObject<List<Chofer>>(json);
-
-                    dgvChoferes.DataSource = choferes;
-                }
-                else
-                {
-                    MessageBox.Show("Error al cargar choferes.");
-                }
+                MessageBox.Show("Error al cargar choferes");
+                return;
             }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var choferes = JsonConvert.DeserializeObject<List<Chofer>>(json);
+
+            // Convertir a DTO para mostrar en la grilla
+            var lista = choferes.Select(c => new ChoferDTO
+            {
+                Id = c.Id,
+                NombreCompleto = c.NombreCompleto,
+                DNI = c.DNI,
+                Telefono = c.Telefono,
+                Disponible = c.Disponible,
+                UsuarioId = c.UsuarioId
+            }).ToList();
+
+            dgvChoferes.DataSource = lista;
         }
 
         private async void btnAgregar_Click(object sender, EventArgs e)
         {
             var form = new FormAgregarEditarChofer();
+
             if (form.ShowDialog() == DialogResult.OK)
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    var json = JsonConvert.SerializeObject(form.Chofer);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+                var content = new StringContent(JsonConvert.SerializeObject(form.Chofer), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("/api/Choferes", content);
 
-                    var response = await client.PostAsync("https://localhost:7083/api/Choferes", content);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show("Chofer agregado correctamente.");
-                        await CargarChoferes();
-                    }
-                    else
-                    {
-                        var mensaje = await response.Content.ReadAsStringAsync();
-                        MessageBox.Show($"Error al agregar el chofer. {mensaje}");
-                    }
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Error al agregar chofer.");
+                    return;
                 }
+
+                await CargarChoferes();
             }
         }
 
         private async void btnEditar_Click(object sender, EventArgs e)
         {
-            if (dgvChoferes.CurrentRow?.DataBoundItem is Chofer seleccionado)
+            if (dgvChoferes.CurrentRow == null)
             {
-                var form = new FormAgregarEditarChofer(seleccionado);
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    using (HttpClient client = new HttpClient())
-                    {
-                        var json = JsonConvert.SerializeObject(form.Chofer);
-                        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                        var response = await client.PutAsync($"https://localhost:7083/api/Choferes/{form.Chofer.Id}", content);
-                        if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                        {
-                            MessageBox.Show("Chofer actualizado.");
-                            await CargarChoferes();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Error al actualizar.");
-                        }
-                    }
-                }
+                MessageBox.Show("Seleccioná un chofer.");
+                return;
             }
-            else
+
+            int id = (int)dgvChoferes.CurrentRow.Cells["Id"].Value;
+
+            // 1. Traer chofer completo
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+            var response = await client.GetAsync($"/api/Choferes/{id}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                MessageBox.Show("Seleccione un chofer para editar.");
+                MessageBox.Show("No se pudo cargar el chofer.");
+                return;
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var chofer = JsonConvert.DeserializeObject<Chofer>(json);
+
+            // 2. Abrir formulario Editar
+            var form = new FormAgregarEditarChofer(chofer);
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                // 3. Guardar cambios (PUT)
+                var content = new StringContent(JsonConvert.SerializeObject(form.Chofer), Encoding.UTF8, "application/json");
+                var putResponse = await client.PutAsync($"/api/Choferes/{id}", content);
+
+                if (!putResponse.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Error al guardar cambios.");
+                    return;
+                }
+
+                await CargarChoferes();
             }
         }
 
         private async void btnEliminar_Click(object sender, EventArgs e)
         {
-            if (dgvChoferes.CurrentRow?.DataBoundItem is Chofer seleccionado)
+            if (dgvChoferes.CurrentRow == null)
             {
-                var confirmar = MessageBox.Show("¿Estás seguro de eliminar este chofer?", "Confirmar", MessageBoxButtons.YesNo);
-                if (confirmar == DialogResult.Yes)
-                {
-                    using (HttpClient client = new HttpClient())
-                    {
-                        var response = await client.DeleteAsync($"https://localhost:7083/api/Choferes/{seleccionado.Id}");
-                        if (response.IsSuccessStatusCode)
-                        {
-                            MessageBox.Show("Chofer eliminado.");
-                            await CargarChoferes();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Error al eliminar.");
-                        }
-                    }
-                }
+                MessageBox.Show("Seleccioná un chofer.");
+                return;
             }
-            else
+
+            int id = (int)dgvChoferes.CurrentRow.Cells["Id"].Value;
+
+            if (MessageBox.Show("¿Eliminar chofer?", "Confirmar", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+            var deleteResponse = await client.DeleteAsync($"/api/Choferes/{id}");
+
+            if (!deleteResponse.IsSuccessStatusCode)
             {
-                MessageBox.Show("Seleccione un chofer para eliminar.");
+                MessageBox.Show("No se pudo eliminar el chofer.");
+                return;
             }
+
+            await CargarChoferes();
         }
 
         private void btnCerrar_Click(object sender, EventArgs e)

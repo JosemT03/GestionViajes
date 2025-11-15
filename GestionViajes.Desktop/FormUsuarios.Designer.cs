@@ -39,14 +39,14 @@
             // dgvUsuarios
             // 
             dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvUsuarios.Location = new Point(55, 37);
+            dgvUsuarios.Location = new Point(28, 37);
             dgvUsuarios.Name = "dgvUsuarios";
-            dgvUsuarios.Size = new Size(240, 150);
+            dgvUsuarios.Size = new Size(600, 150);
             dgvUsuarios.TabIndex = 0;
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(340, 52);
+            btnAgregar.Location = new Point(160, 226);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(75, 23);
             btnAgregar.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             // btnEditar
             // 
-            btnEditar.Location = new Point(341, 98);
+            btnEditar.Location = new Point(160, 282);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(75, 23);
             btnEditar.TabIndex = 2;
@@ -66,7 +66,7 @@
             // 
             // btnEliminar
             // 
-            btnEliminar.Location = new Point(346, 148);
+            btnEliminar.Location = new Point(55, 282);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(75, 23);
             btnEliminar.TabIndex = 3;
@@ -76,7 +76,7 @@
             // 
             // btnRefrescar
             // 
-            btnRefrescar.Location = new Point(350, 200);
+            btnRefrescar.Location = new Point(55, 226);
             btnRefrescar.Name = "btnRefrescar";
             btnRefrescar.Size = new Size(75, 23);
             btnRefrescar.TabIndex = 4;
