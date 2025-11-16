@@ -19,11 +19,7 @@ namespace GestionViajes.Desktop
         {
             InitializeComponent();
             Load += FormVehiculos_Load;
-            BtnAgregar.Click += BtnAgregar_Click;
-            BtnEditar.Click += BtnEditar_Click;
-            BtnEliminar.Click += BtnEliminar_Click;
-            BtnCerrar.Click += BtnCerrar_Click;
-            BtnRefrescar.Click += async (s, e) => await CargarVehiculos();
+           
 
         }
 

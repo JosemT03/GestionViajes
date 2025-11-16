@@ -33,6 +33,7 @@
             btnEditar = new Button();
             btnEliminar = new Button();
             btnRefrescar = new Button();
+            btnCerrar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).BeginInit();
             SuspendLayout();
             // 
@@ -84,11 +85,22 @@
             btnRefrescar.UseVisualStyleBackColor = true;
             btnRefrescar.Click += btnRefrescar_Click;
             // 
+            // btnCerrar
+            // 
+            btnCerrar.Location = new Point(294, 228);
+            btnCerrar.Name = "btnCerrar";
+            btnCerrar.Size = new Size(75, 23);
+            btnCerrar.TabIndex = 5;
+            btnCerrar.Text = "Cerrar";
+            btnCerrar.UseVisualStyleBackColor = true;
+            btnCerrar.Click += btnCerrar_Click;
+            // 
             // FormUsuarios
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnCerrar);
             Controls.Add(btnRefrescar);
             Controls.Add(btnEliminar);
             Controls.Add(btnEditar);
@@ -108,5 +120,6 @@
         private Button btnEditar;
         private Button btnEliminar;
         private Button btnRefrescar;
+        private Button btnCerrar;
     }
 }

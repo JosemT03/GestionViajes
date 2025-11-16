@@ -41,7 +41,7 @@
             dgvPedidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvPedidos.Location = new Point(35, 20);
             dgvPedidos.Name = "dgvPedidos";
-            dgvPedidos.Size = new Size(240, 150);
+            dgvPedidos.Size = new Size(583, 150);
             dgvPedidos.TabIndex = 0;
             // 
             // BtnAgregarPedido

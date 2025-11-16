@@ -18,8 +18,7 @@ namespace GestionViajes.Desktop
         public FormAgregarEditarVehiculo(Vehiculo? vehiculo = null)
         {
             InitializeComponent();
-            BtnGuardar.Click += BtnGuardar_Click;
-            BtnCancelar.Click += BtnCancelar_Click;
+            Vehiculo = vehiculo ?? new Vehiculo();
 
             nudKilometraje.Minimum = 0;
             nudKilometraje.Maximum = 1000000;

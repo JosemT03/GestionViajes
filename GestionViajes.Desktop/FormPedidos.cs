@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GestionViajes.Desktop.Models;
 
-namespace GestionViajes.Desktop
+namespace GestionViajes.Desktop 
 {
     public partial class FormPedidos : Form
     {
@@ -18,10 +18,7 @@ namespace GestionViajes.Desktop
         {
             InitializeComponent();
             Load += FormPedidos_Load;
-            BtnAgregarPedido.Click += BtnAgregarPedido_Click;
-            BtnEditarPedido.Click += BtnEditarPedido_Click;
-            BtnEliminarPedido.Click += BtnEliminarPedido_Click;
-            BtnCerrar.Click += BtnCerrar_Click;
+            
         }
 
         private async void FormPedidos_Load(object sender, EventArgs e)
@@ -34,17 +31,20 @@ namespace GestionViajes.Desktop
             using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
             var response = await client.GetAsync("/api/Pedidos");
 
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var pedidos = JsonConvert.DeserializeObject<List<Pedido>>(json);
-                dgvPedidos.DataSource = null;
-                dgvPedidos.DataSource = pedidos;
-            }
-            else
+            if (!response.IsSuccessStatusCode)
             {
                 MessageBox.Show("Error al cargar los pedidos.");
+                return;
             }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            // ⛔ Ahora vienen dinámicos, no la clase Pedido
+            var pedidos = JsonConvert.DeserializeObject<List<dynamic>>(json);
+
+            dgvPedidos.DataSource = pedidos;
+
+            FormatearGrilla();
         }
 
         private async void BtnAgregarPedido_Click(object sender, EventArgs e)
@@ -57,8 +57,7 @@ namespace GestionViajes.Desktop
 
                 var request = new
                 {
-                    pedido.Provincia,
-                    pedido.Sucursal,
+                    pedido.SucursalId,
                     pedido.NumeroPedido,
                     pedido.FechaEntrega,
                     pedido.Estado,
@@ -81,70 +80,75 @@ namespace GestionViajes.Desktop
 
         private async void BtnEditarPedido_Click(object sender, EventArgs e)
         {
-            if (dgvPedidos.CurrentRow?.DataBoundItem is Pedido seleccionado)
-            {
-                var copia = new Pedido
-                {
-                    Id = seleccionado.Id,
-                    Provincia = seleccionado.Provincia,
-                    Sucursal = seleccionado.Sucursal,
-                    NumeroPedido = seleccionado.NumeroPedido,
-                    FechaEntrega = seleccionado.FechaEntrega,
-                    Estado = seleccionado.Estado,
-                    ChoferId = seleccionado.ChoferId,
-                    VehiculoId = seleccionado.VehiculoId
-                };
-
-                var form = new FormAgregarEditarPedido(copia);
-
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    var pedido = form.Pedido;
-
-                    var request = new
-                    {
-                        pedido.Id,
-                        pedido.Provincia,
-                        pedido.Sucursal,
-                        pedido.NumeroPedido,
-                        pedido.FechaEntrega,
-                        pedido.Estado,
-                        pedido.ChoferId,
-                        pedido.VehiculoId
-                    };
-
-                    using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-                    var json = JsonConvert.SerializeObject(request);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    var response = await client.PutAsync($"/api/Pedidos/{pedido.Id}", content);
-
-                    if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                        await CargarPedidos();
-                    else
-                        MessageBox.Show("Error al actualizar el pedido.");
-                }
-            }
-            else
+            if (dgvPedidos.CurrentRow == null)
             {
                 MessageBox.Show("Seleccione un pedido.");
+                return;
+            }
+
+            dynamic seleccionado = dgvPedidos.CurrentRow.DataBoundItem;
+
+            // Crear objeto Pedido compatible con FormAgregarEditarPedido
+            var copia = new GestionViajes.Desktop.Models.Pedido
+            {
+                Id = (int)seleccionado.id,
+                SucursalId = (int)seleccionado.sucursalId,
+                NumeroPedido = (string)seleccionado.numeroPedido,
+                FechaEntrega = seleccionado.fechaEntrega,
+                Estado = (string)seleccionado.estado,
+                ChoferId = seleccionado.choferId,
+                VehiculoId = seleccionado.vehiculoId
+            };
+
+            var form = new FormAgregarEditarPedido(copia);
+
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                var pedido = form.Pedido;
+
+                var request = new
+                {
+                    pedido.Id,
+                    pedido.SucursalId,
+                    pedido.NumeroPedido,
+                    pedido.FechaEntrega,
+                    pedido.Estado,
+                    pedido.ChoferId,
+                    pedido.VehiculoId
+                };
+
+                using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+                var json = JsonConvert.SerializeObject(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PutAsync($"/api/Pedidos/{pedido.Id}", content);
+
+                if (response.IsSuccessStatusCode)
+                    await CargarPedidos();
+                else
+                    MessageBox.Show("Error al actualizar el pedido.");
             }
         }
 
         private async void BtnEliminarPedido_Click(object sender, EventArgs e)
         {
-            if (dgvPedidos.CurrentRow?.DataBoundItem is Pedido seleccionado)
+            if (dgvPedidos.CurrentRow == null)
             {
-                var confirmar = MessageBox.Show("¿Eliminar pedido?", "Confirmar", MessageBoxButtons.YesNo);
-                if (confirmar == DialogResult.Yes)
-                {
-                    using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-                    var response = await client.DeleteAsync($"/api/Pedidos/{seleccionado.Id}");
-                    if (response.IsSuccessStatusCode)
-                        await CargarPedidos();
-                    else
-                        MessageBox.Show("Error al eliminar.");
-                }
+                MessageBox.Show("Seleccione un pedido.");
+                return;
+            }
+
+            dynamic seleccionado = dgvPedidos.CurrentRow.DataBoundItem;
+
+            if (MessageBox.Show("¿Eliminar pedido?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+                var response = await client.DeleteAsync($"/api/Pedidos/{(int)seleccionado.id}");
+
+                if (response.IsSuccessStatusCode)
+                    await CargarPedidos();
+                else
+                    MessageBox.Show("Error al eliminar.");
             }
         }
 
@@ -152,5 +156,25 @@ namespace GestionViajes.Desktop
         {
             Close();
         }
+
+        private void FormatearGrilla()
+        {
+            if (dgvPedidos.Columns.Count == 0) return;
+
+            dgvPedidos.Columns["id"].HeaderText = "ID";
+            dgvPedidos.Columns["numeroPedido"].HeaderText = "Pedido";
+            dgvPedidos.Columns["sucursal"].HeaderText = "Sucursal";
+            dgvPedidos.Columns["provincia"].HeaderText = "Provincia";
+            dgvPedidos.Columns["fechaEntrega"].HeaderText = "Entrega";
+            dgvPedidos.Columns["estado"].HeaderText = "Estado";
+            dgvPedidos.Columns["chofer"].HeaderText = "Chofer";
+            dgvPedidos.Columns["vehiculo"].HeaderText = "Vehículo";
+
+            dgvPedidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        }
+
+
+
+
     }
 }

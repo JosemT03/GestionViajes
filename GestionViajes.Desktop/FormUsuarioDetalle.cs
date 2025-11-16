@@ -30,9 +30,11 @@ namespace GestionViajes.Desktop
 
         private async void FormUsuarioDetalle_Load(object sender, EventArgs e)
         {
+            // ✔ PREVENIR DUPLICADOS
+            cmbRol.Items.Clear();
             cmbRol.Items.AddRange(new[] { "Admin", "Chofer" });
-            cmbRol.SelectedIndexChanged += cmbRol_SelectedIndexChanged;
 
+            cmbRol.SelectedIndexChanged += cmbRol_SelectedIndexChanged;
             cmbChofer.Visible = false;
             lblChofer.Visible = false;
 
@@ -213,5 +215,7 @@ namespace GestionViajes.Desktop
         {
             this.Close();
         }
+
+        
     }
 }

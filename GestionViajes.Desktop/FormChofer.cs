@@ -14,7 +14,7 @@ namespace GestionViajes.Desktop
     public partial class FormChofer : Form
     {
         private readonly int _choferId;
-        private List<Pedido> _pedidosAsignados = new();
+        private List<dynamic> _pedidosAsignados = new();
 
         public FormChofer(int choferId)
         {
@@ -30,6 +30,7 @@ namespace GestionViajes.Desktop
             CargarPedidos();
         }
 
+        // 📌 Traer pedidos del chofer logueado
         private async void CargarPedidos()
         {
             using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
@@ -42,30 +43,67 @@ namespace GestionViajes.Desktop
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var pedidos = JsonConvert.DeserializeObject<List<Pedido>>(json);
 
-            // Filtrar SOLO los pedidos del chofer
+            // Los pedidos vienen como dinámicos
+            var pedidos = JsonConvert.DeserializeObject<List<dynamic>>(json);
+
+            // Obtener el nombre del chofer
+            string nombreChofer = await ObtenerNombreChofer(_choferId);
+
+            string estadoSeleccionado = cbNuevoEstado.SelectedItem?.ToString();
+
+            // 🔥 Filtrar pedidos SOLO del chofer logueado
             _pedidosAsignados = pedidos
-                .Where(p => p.ChoferId == _choferId)
-                .OrderBy(p => p.Estado)
+                .Where(p =>
+                    ((string)p.chofer) == nombreChofer &&
+                    (string)p.estado == estadoSeleccionado
+                )
                 .ToList();
 
-            dgvPedidosChofer.DataSource = _pedidosAsignados;
+            // Cargar en DGV
+            dgvPedidosChofer.DataSource = _pedidosAsignados
+     .Select(p => new
+     {
+         Id = (int)p.id,
+         Numero = (string)p.numeroPedido,
+         Provincia = (string)p.provincia,
+         Sucursal = (string)p.sucursal,
+         // ✔ Fecha segura y sin errores
+         Fecha = Convert.ToDateTime(p.fechaEntrega).ToShortDateString(),
+         Estado = (string)p.estado,
+         Vehículo = (string)p.vehiculo
+     }).ToList();
+
 
             FormatearGrilla();
         }
 
+        // 📌 Obtiene el nombre del chofer según su ID
+        private async Task<string> ObtenerNombreChofer(int choferId)
+        {
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+            var resp = await client.GetAsync("/api/Choferes");
+
+            if (!resp.IsSuccessStatusCode)
+                return "";
+
+            var json = await resp.Content.ReadAsStringAsync();
+            var choferes = JsonConvert.DeserializeObject<List<dynamic>>(json);
+
+            var ch = choferes.FirstOrDefault(c => (int)c.id == choferId);
+
+            return ch != null ? (string)ch.nombreCompleto : "";
+        }
+
+        // 📌 FORMATO DE LA GRILLA
         private void FormatearGrilla()
         {
-            if (dgvPedidosChofer.Columns.Count == 0) return;
-
-            dgvPedidosChofer.Columns["ChoferId"].Visible = false;
-            dgvPedidosChofer.Columns["VehiculoId"].Visible = true;
+            if (dgvPedidosChofer.Columns.Count == 0)
+                return;
 
             dgvPedidosChofer.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPedidosChofer.ReadOnly = true;
 
-            // Colorear filas según estado
             foreach (DataGridViewRow row in dgvPedidosChofer.Rows)
             {
                 string estado = row.Cells["Estado"].Value?.ToString();
@@ -73,11 +111,14 @@ namespace GestionViajes.Desktop
                 switch (estado)
                 {
                     case "Pendiente":
-                        row.DefaultCellStyle.BackColor = Color.LightGoldenrodYellow;
+                        row.DefaultCellStyle.BackColor = Color.LightYellow;
                         break;
+
+                    case "En curso":
                     case "En Curso":
-                        row.DefaultCellStyle.BackColor = Color.LightBlue;
+                        row.DefaultCellStyle.BackColor = Color.LightSkyBlue;
                         break;
+
                     case "Completado":
                         row.DefaultCellStyle.BackColor = Color.LightGreen;
                         break;
@@ -85,57 +126,72 @@ namespace GestionViajes.Desktop
             }
         }
 
+        // 📌 BOTÓN ACTUALIZAR ESTADO
         private async void btnActualizarEstado_Click(object sender, EventArgs e)
         {
             if (dgvPedidosChofer.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Seleccioná un pedido primero.");
+                MessageBox.Show("Seleccioná un pedido.");
                 return;
             }
 
-            var row = dgvPedidosChofer.SelectedRows[0];
-            var pedido = row.DataBoundItem as Pedido;
+            int pedidoId = (int)dgvPedidosChofer.SelectedRows[0].Cells["Id"].Value;
 
-            if (pedido == null)
+            var pedidoReal = await ObtenerPedidoReal(pedidoId);
+
+            if (pedidoReal == null)
             {
-                MessageBox.Show("Error interno al leer el pedido.");
+                MessageBox.Show("No se pudo cargar el pedido real.");
                 return;
             }
 
             string nuevoEstado = cbNuevoEstado.SelectedItem?.ToString();
+
             if (string.IsNullOrWhiteSpace(nuevoEstado))
             {
                 MessageBox.Show("Seleccioná un estado válido.");
                 return;
             }
 
-            // Construir un pedido COMPLETO para enviar al PUT
-            var pedidoActualizado = new Pedido
-            {
-                Id = pedido.Id,
-                Provincia = pedido.Provincia,
-                Sucursal = pedido.Sucursal,
-                NumeroPedido = pedido.NumeroPedido,
-                FechaEntrega = pedido.FechaEntrega,
-                Estado = nuevoEstado,
-                ChoferId = pedido.ChoferId,
-                VehiculoId = pedido.VehiculoId
-            };
+            pedidoReal.Estado = nuevoEstado;
 
             using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(pedidoActualizado), Encoding.UTF8, "application/json");
 
-            var response = await client.PutAsync($"/api/Pedidos/{pedido.Id}", jsonContent);
+            var json = JsonConvert.SerializeObject(pedidoReal);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            if (response.IsSuccessStatusCode)
+            var resp = await client.PutAsync($"/api/Pedidos/{pedidoReal.Id}", content);
+
+            if (resp.IsSuccessStatusCode)
             {
-                MessageBox.Show("Estado actualizado correctamente.");
-                CargarPedidos(); // Refrescar vista
+                MessageBox.Show("Estado actualizado.");
+                CargarPedidos();
             }
             else
             {
-                MessageBox.Show("Error al actualizar el estado.");
+                MessageBox.Show("Error al actualizar.");
             }
+        }
+
+        // 📌 Obtener pedido REAL desde la API
+        private async Task<Pedido> ObtenerPedidoReal(int id)
+        {
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+
+            var resp = await client.GetAsync($"/api/Pedidos/{id}");
+
+            if (!resp.IsSuccessStatusCode)
+                return null;
+
+            var json = await resp.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Pedido>(json);
+        }
+
+        private void btnCerrarSesion_Click(object sender, EventArgs e)
+        {
+           
+            this.Close();
         }
     }
 }

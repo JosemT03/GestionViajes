@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            txtSucursal = new TextBox();
             txtNumeroPedido = new TextBox();
             dtpFechaEntrega = new DateTimePicker();
             cmbEstado = new ComboBox();
@@ -36,22 +35,14 @@
             cmbVehiculo = new ComboBox();
             BtnGuardar = new Button();
             BtnCancelar = new Button();
-            label1 = new Label();
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
             label6 = new Label();
             label7 = new Label();
-            cmbProvincia = new ComboBox();
+            cmbSucursal = new ComboBox();
             SuspendLayout();
-            // 
-            // txtSucursal
-            // 
-            txtSucursal.Location = new Point(103, 76);
-            txtSucursal.Name = "txtSucursal";
-            txtSucursal.Size = new Size(100, 23);
-            txtSucursal.TabIndex = 1;
             // 
             // txtNumeroPedido
             // 
@@ -112,15 +103,6 @@
             BtnCancelar.UseVisualStyleBackColor = true;
             BtnCancelar.Click += BtnCancelar_Click;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(43, 28);
-            label1.Name = "label1";
-            label1.Size = new Size(59, 15);
-            label1.TabIndex = 9;
-            label1.Text = "Provincia:";
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -175,28 +157,27 @@
             label7.TabIndex = 15;
             label7.Text = "Vehiculo";
             // 
-            // cmbProvincia
+            // cmbSucursal
             // 
-            cmbProvincia.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbProvincia.FormattingEnabled = true;
-            cmbProvincia.Location = new Point(115, 28);
-            cmbProvincia.Name = "cmbProvincia";
-            cmbProvincia.Size = new Size(150, 23);
-            cmbProvincia.TabIndex = 16;
+            cmbSucursal.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbSucursal.FormattingEnabled = true;
+            cmbSucursal.Location = new Point(119, 82);
+            cmbSucursal.Name = "cmbSucursal";
+            cmbSucursal.Size = new Size(200, 23);
+            cmbSucursal.TabIndex = 17;
             // 
             // FormAgregarEditarPedido
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(cmbProvincia);
+            Controls.Add(cmbSucursal);
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
-            Controls.Add(label1);
             Controls.Add(BtnCancelar);
             Controls.Add(BtnGuardar);
             Controls.Add(cmbVehiculo);
@@ -204,7 +185,6 @@
             Controls.Add(cmbEstado);
             Controls.Add(dtpFechaEntrega);
             Controls.Add(txtNumeroPedido);
-            Controls.Add(txtSucursal);
             Name = "FormAgregarEditarPedido";
             Text = "FormAgregarEditarPedido";
             Load += FormAgregarEditarPedido_Load;
@@ -213,7 +193,6 @@
         }
 
         #endregion
-        private TextBox txtSucursal;
         private TextBox txtNumeroPedido;
         private DateTimePicker dtpFechaEntrega;
         private ComboBox cmbEstado;
@@ -221,13 +200,12 @@
         private ComboBox cmbVehiculo;
         private Button BtnGuardar;
         private Button BtnCancelar;
-        private Label label1;
         private Label label2;
         private Label label3;
         private Label label4;
         private Label label5;
         private Label label6;
         private Label label7;
-        private ComboBox cmbProvincia;
+        private ComboBox cmbSucursal;
     }
 }

@@ -33,6 +33,7 @@
             btnActualizarEstado = new Button();
             cbNuevoEstado = new ComboBox();
             btnRefrescar = new Button();
+            btnCerrarSesion = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvPedidosChofer).BeginInit();
             SuspendLayout();
             // 
@@ -80,11 +81,22 @@
             btnRefrescar.Text = "Recargar Pedidos";
             btnRefrescar.UseVisualStyleBackColor = true;
             // 
+            // btnCerrarSesion
+            // 
+            btnCerrarSesion.Location = new Point(340, 304);
+            btnCerrarSesion.Name = "btnCerrarSesion";
+            btnCerrarSesion.Size = new Size(121, 46);
+            btnCerrarSesion.TabIndex = 5;
+            btnCerrarSesion.Text = "Cerrar Sesion";
+            btnCerrarSesion.UseVisualStyleBackColor = true;
+            btnCerrarSesion.Click += btnCerrarSesion_Click;
+            // 
             // FormChofer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnCerrarSesion);
             Controls.Add(btnRefrescar);
             Controls.Add(cbNuevoEstado);
             Controls.Add(btnActualizarEstado);
@@ -104,5 +116,6 @@
         private Button btnActualizarEstado;
         private ComboBox cbNuevoEstado;
         private Button btnRefrescar;
+        private Button btnCerrarSesion;
     }
 }

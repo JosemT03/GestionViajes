@@ -33,6 +33,7 @@
             btnGenerar = new Button();
             btnExportar = new Button();
             dtpFiltroMes = new DateTimePicker();
+            btnCerrar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvEstadisticas).BeginInit();
             SuspendLayout();
             // 
@@ -86,11 +87,22 @@
             dtpFiltroMes.Size = new Size(100, 23);
             dtpFiltroMes.TabIndex = 4;
             // 
+            // btnCerrar
+            // 
+            btnCerrar.Location = new Point(531, 336);
+            btnCerrar.Name = "btnCerrar";
+            btnCerrar.Size = new Size(75, 23);
+            btnCerrar.TabIndex = 5;
+            btnCerrar.Text = "Cerrar";
+            btnCerrar.UseVisualStyleBackColor = true;
+            btnCerrar.Click += btnCerrar_Click;
+            // 
             // FormInformeEstadistico
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnCerrar);
             Controls.Add(dtpFiltroMes);
             Controls.Add(btnExportar);
             Controls.Add(btnGenerar);
@@ -110,5 +122,6 @@
         private Button btnGenerar;
         private Button btnExportar;
         private DateTimePicker dtpFiltroMes;
+        private Button btnCerrar;
     }
 }

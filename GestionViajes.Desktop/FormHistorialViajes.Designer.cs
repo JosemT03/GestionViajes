@@ -36,6 +36,7 @@
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
+            btnCerrar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvHistorial).BeginInit();
             SuspendLayout();
             // 
@@ -76,9 +77,9 @@
             // dgvHistorial
             // 
             dgvHistorial.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvHistorial.Location = new Point(248, 268);
+            dgvHistorial.Location = new Point(172, 268);
             dgvHistorial.Name = "dgvHistorial";
-            dgvHistorial.Size = new Size(240, 150);
+            dgvHistorial.Size = new Size(464, 150);
             dgvHistorial.TabIndex = 4;
             // 
             // label1
@@ -108,11 +109,22 @@
             label3.TabIndex = 7;
             label3.Text = "Fecha";
             // 
+            // btnCerrar
+            // 
+            btnCerrar.Location = new Point(478, 187);
+            btnCerrar.Name = "btnCerrar";
+            btnCerrar.Size = new Size(75, 23);
+            btnCerrar.TabIndex = 8;
+            btnCerrar.Text = "Cerrar";
+            btnCerrar.UseVisualStyleBackColor = true;
+            btnCerrar.Click += btnCerrar_Click;
+            // 
             // FormHistorialViajes
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnCerrar);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -139,5 +151,6 @@
         private Label label1;
         private Label label2;
         private Label label3;
+        private Button btnCerrar;
     }
 }

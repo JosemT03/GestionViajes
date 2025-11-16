@@ -14,15 +14,17 @@ namespace GestionViajes.Desktop
     public partial class FormAdministrador : Form
     {
         private string _nombreAdmin;
-        public FormAdministrador(string nombreAdmin)
+        public FormAdministrador()
         {
             InitializeComponent();
-            btnInformeEstadistico.Click += btnInformeEstadistico_Click;
-            btnGestionarChoferes.Click += btnGestionarChoferes_Click;
-            btnGestionarUsuarios.Click += btnGestionarUsuarios_Click;
+            
+
+        }
+
+        public FormAdministrador(string nombreAdmin) : this()
+        {
             _nombreAdmin = nombreAdmin;
             lblBienvenida.Text = $"Bienvenido, {_nombreAdmin}";
-
         }
 
         private void FormAdministrador_Load(object sender, EventArgs e)
@@ -32,46 +34,46 @@ namespace GestionViajes.Desktop
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            var loginForm = new LoginForm();
-            loginForm.Show();
-            this.Close();
+            
+            this.Hide();   // Usamos Hide() para NO generar eventos de cierre duplicados
+            this.Dispose();
 
         }
 
         private void btnGestionarUsuarios_Click(object sender, EventArgs e)
         {
-            FormUsuarios formUsuarios = new FormUsuarios();
-            formUsuarios.ShowDialog();
+            new FormUsuarios().Show();
         }
 
         private void btnGestionarChoferes_Click(object sender, EventArgs e)
         {
-            var formChoferes = new FormChoferes();
-            formChoferes.ShowDialog();
+            new FormChoferes().Show();
         }
 
         private void btnGestionarVehiculos_Click(object sender, EventArgs e)
         {
-            var formVehiculos = new FormVehiculos();
-            formVehiculos.ShowDialog();
+            new FormVehiculos().Show();
         }
 
         private void BtnPedidos_Click(object sender, EventArgs e)
         {
-            var form = new FormPedidos();
-            form.ShowDialog();
+            new FormPedidos().Show();
         }
 
         private void BtnHistorial_Click(object sender, EventArgs e)
         {
-            var form = new FormHistorialViajes();
-            form.ShowDialog();
+            new FormHistorialViajes().Show();
         }
 
         private void btnInformeEstadistico_Click(object sender, EventArgs e)
         {
-            FormInformeEstadistico form = new FormInformeEstadistico();
-            form.ShowDialog(); // o form.Show(); si preferís que no sea modal
+            new FormInformeEstadistico().Show();
         }
+
+        private void btnSucursales_Click(object sender, EventArgs e)
+        {
+            new FormSucursales().Show();
+        }
+
     }
 }

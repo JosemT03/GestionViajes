@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GestionViajes.Desktop.Models;
+﻿using GestionViajes.Desktop.Models;
 using Newtonsoft.Json;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-
-
-
-
+using System.Linq;
+using System.Net.Http;
+using System.Windows.Forms;
 
 namespace GestionViajes.Desktop
 {
     public partial class FormInformeEstadistico : Form
     {
-        private List<dynamic> pedidos = new List<dynamic>();
+        private List<dynamic> _pedidos = new();
+        private List<dynamic> _filtrados = new();   // ✔ NUEVO: lista filtrada REAL
+
         public FormInformeEstadistico()
         {
             InitializeComponent();
@@ -43,36 +35,27 @@ namespace GestionViajes.Desktop
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var lista = JsonConvert.DeserializeObject<List<dynamic>>(json);
+            _pedidos = JsonConvert.DeserializeObject<List<dynamic>>(json);
 
             int mes = dtpFiltroMes.Value.Month;
             int año = dtpFiltroMes.Value.Year;
 
-            var filtrados = lista
+            _filtrados = _pedidos
                 .Where(p =>
                 {
-                    var fecha = DateTime.Parse(p.fechaEntrega.ToString());
+                    DateTime fecha = Convert.ToDateTime(p.fechaEntrega);
                     return fecha.Month == mes && fecha.Year == año;
                 })
                 .ToList();
 
-            if (!filtrados.Any())
+            if (!_filtrados.Any())
             {
                 MessageBox.Show("No hay pedidos en ese mes.");
                 dgvEstadisticas.DataSource = null;
                 return;
             }
 
-            // **GUARDAR PARA EXPORTAR PDF**
-            pedidos = filtrados;
-
-            // Mostrar resumen
-            var resumen = filtrados
-                .GroupBy(p => (string)p.estado)
-                .Select(g => new { Estado = g.Key, Cantidad = g.Count() })
-                .ToList();
-
-            dgvEstadisticas.DataSource = filtrados.Select(p => new
+            dgvEstadisticas.DataSource = _filtrados.Select(p => new
             {
                 Provincia = (string)p.provincia,
                 Sucursal = (string)p.sucursal,
@@ -82,87 +65,84 @@ namespace GestionViajes.Desktop
                 Chofer = (string)p.chofer,
                 Vehiculo = (string)p.vehiculo
             }).ToList();
-
         }
 
+        // ======================
+        // EXPORTAR PDF
+        // ======================
         private void btnExportar_Click(object sender, EventArgs e)
         {
-            if (pedidos.Count == 0)
+            if (_filtrados.Count == 0)
             {
-                MessageBox.Show("No hay datos para exportar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No hay datos para exportar.");
                 return;
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "PDF files (*.pdf)|*.pdf";
-            saveFileDialog.Title = "Guardar Informe de Pedidos";
-            saveFileDialog.FileName = "InformeClientes.pdf";
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            SaveFileDialog dialog = new SaveFileDialog
             {
-                try
-                {
-                    string path = saveFileDialog.FileName;
-
-                    Document doc = new Document(PageSize.A4.Rotate()); // Horizontal
-                    PdfWriter.GetInstance(doc, new FileStream(path, FileMode.Create));
-                    doc.Open();
-
-                    // Título
-                    Paragraph titulo = new Paragraph("INFORME DETALLADO DE PEDIDOS\n\n",
-                        FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 20));
-                    titulo.Alignment = Element.ALIGN_CENTER;
-                    doc.Add(titulo);
-
-                    // Tabla con 7 columnas
-                    PdfPTable table = new PdfPTable(7);
-                    table.WidthPercentage = 100;
-
-                    string[] headers = {
-                "Provincia", "Sucursal", "Número",
-                "Fecha", "Estado", "Chofer", "Vehículo"
+                Filter = "PDF (*.pdf)|*.pdf",
+                FileName = "InformePedidos.pdf"
             };
 
-                    foreach (var h in headers)
-                    {
-                        PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)))
-                        {
-                            BackgroundColor = BaseColor.LIGHT_GRAY
-                        };
-                        table.AddCell(cell);
-                    }
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
 
-                    // Agregar los pedidos filtrados
-                    foreach (var p in pedidos)
-                    {
-                        table.AddCell(new Phrase((string)p.provincia ?? "N/A"));
-                        table.AddCell(new Phrase((string)p.sucursal ?? "N/A"));
-                        table.AddCell(new Phrase((string)p.numeroPedido ?? "N/A"));
+            try
+            {
+                Document doc = new Document(PageSize.A4.Rotate());
+                PdfWriter.GetInstance(doc, new FileStream(dialog.FileName, FileMode.Create));
+                doc.Open();
 
-                        string fecha = p.fechaEntrega != null
-                            ? Convert.ToDateTime(p.fechaEntrega).ToShortDateString()
-                            : "N/A";
-                        table.AddCell(new Phrase(fecha));
+                // Título
+                Paragraph titulo = new Paragraph("INFORME ESTADÍSTICO DE PEDIDOS\n\n",
+                    FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 20));
+                titulo.Alignment = Element.ALIGN_CENTER;
+                doc.Add(titulo);
 
-                        table.AddCell(new Phrase((string)p.estado ?? "N/A"));
-                        table.AddCell(new Phrase((string)p.chofer ?? "Sin asignar"));
-                        table.AddCell(new Phrase((string)p.vehiculo ?? "Sin asignar"));
-                    }
+                // Tabla
+                PdfPTable tabla = new PdfPTable(7);
+                tabla.WidthPercentage = 100;
 
-                    doc.Add(table);
-                    doc.Close();
+                string[] headers = { "Provincia", "Sucursal", "Número", "Fecha", "Estado", "Chofer", "Vehículo" };
 
-                    MessageBox.Show("PDF generado correctamente.", "Éxito");
-                }
-                catch (Exception ex)
+                foreach (var h in headers)
                 {
-                    MessageBox.Show("Error al exportar PDF: " + ex.Message);
+                    PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)))
+                    {
+                        BackgroundColor = BaseColor.LIGHT_GRAY
+                    };
+                    tabla.AddCell(cell);
                 }
+
+                // Filas (usamos la lista filtrada)
+                foreach (var p in _filtrados)
+                {
+                    tabla.AddCell((string)p.provincia);
+                    tabla.AddCell((string)p.sucursal);
+                    tabla.AddCell((string)p.numeroPedido);
+
+                    // ✔ FECHA SIN PARSEAR, SEGURA
+                    tabla.AddCell(Convert.ToDateTime(p.fechaEntrega).ToShortDateString());
+
+                    tabla.AddCell((string)p.estado);
+                    tabla.AddCell((string)p.chofer);
+                    tabla.AddCell((string)p.vehiculo);
+                }
+
+                doc.Add(tabla);
+                doc.Close();
+
+                MessageBox.Show("PDF generado correctamente.");
             }
-
-
-
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al exportar: " + ex.Message);
+            }
         }
 
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

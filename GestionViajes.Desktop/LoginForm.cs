@@ -11,17 +11,17 @@ namespace GestionViajes.Desktop
     public partial class LoginForm : Form
     {
         public LoginForm()
-        {
+        { 
             InitializeComponent();
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtUsuario.Text) ||
-        string.IsNullOrWhiteSpace(txtContraseña.Text))
+               string.IsNullOrWhiteSpace(txtContraseña.Text))
             {
                 MessageBox.Show("Por favor, completá todos los campos.", "Campos vacíos",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -37,13 +37,12 @@ namespace GestionViajes.Desktop
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
-
                 var response = await client.PostAsync("/api/Login", content);
 
                 if (!response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Usuario o contraseña incorrectos.",
-                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -59,8 +58,12 @@ namespace GestionViajes.Desktop
                 // ======= LOGIN DE ADMIN =======
                 if (result.Rol == "Administrador")
                 {
-                    new FormAdministrador(result.Nombre).Show();
-                    this.Hide();
+                    using (var formAdmin = new FormAdministrador(result.Nombre))
+                    {
+                        this.Hide();    // oculto login
+                        formAdmin.ShowDialog(); // modal
+                        this.Show();    // muestro login cuando vuelve
+                    }
                     return;
                 }
 
@@ -70,18 +73,21 @@ namespace GestionViajes.Desktop
                     if (result.ChoferId == null || result.ChoferId == 0)
                     {
                         MessageBox.Show("Este usuario no está asignado a ningún chofer.\n" +
-                                        "Asigná un Chofer desde FormUsuarios.",
-                                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            "Asigná un Chofer desde FormUsuarios.",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
-                    new FormChofer(result.ChoferId.Value).Show();
-                    this.Hide();
+                    using (var formChofer = new FormChofer(result.ChoferId.Value))
+                    {
+                        this.Hide();
+                        formChofer.ShowDialog();
+                        this.Show();
+                    }
                     return;
                 }
 
                 MessageBox.Show("Rol no reconocido. Contactá al administrador.");
-
             }
             catch (Exception ex)
             {

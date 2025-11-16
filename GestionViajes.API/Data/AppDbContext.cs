@@ -15,6 +15,8 @@ namespace GestionViajes.API.Data
         public DbSet<Vehiculo> Vehiculos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Entrega> Entregas { get; set; }
+        public DbSet<Sucursal> Sucursales { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
