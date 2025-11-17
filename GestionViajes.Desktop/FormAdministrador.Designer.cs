@@ -16,126 +16,228 @@
 
         private void InitializeComponent()
         {
-            this.lblBienvenida = new System.Windows.Forms.Label();
-            this.btnCerrarSesion = new System.Windows.Forms.Button();
-            this.btnGestionarUsuarios = new System.Windows.Forms.Button();
-            this.btnGestionarChoferes = new System.Windows.Forms.Button();
-            this.btnGestionarVehiculos = new System.Windows.Forms.Button();
-            this.BtnPedidos = new System.Windows.Forms.Button();
-            this.BtnHistorial = new System.Windows.Forms.Button();
-            this.btnInformeEstadistico = new System.Windows.Forms.Button();
-            this.btnSucursales = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAdministrador));
+            lblBienvenida = new Label();
+            btnCerrarSesion = new Button();
+            btnGestionarUsuarios = new Button();
+            btnGestionarChoferes = new Button();
+            btnGestionarVehiculos = new Button();
+            BtnPedidos = new Button();
+            BtnHistorial = new Button();
+            btnInformeEstadistico = new Button();
+            btnSucursales = new Button();
+            pictureBox1 = new PictureBox();
+            label1 = new Label();
+            groupBox1 = new GroupBox();
+            label2 = new Label();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            groupBox1.SuspendLayout();
+            SuspendLayout();
             // 
             // lblBienvenida
             // 
-            this.lblBienvenida.AutoSize = true;
-            this.lblBienvenida.Location = new System.Drawing.Point(22, 9);
-            this.lblBienvenida.Name = "lblBienvenida";
-            this.lblBienvenida.Size = new System.Drawing.Size(69, 15);
-            this.lblBienvenida.TabIndex = 0;
-            this.lblBienvenida.Text = "Bienvenido:";
+            lblBienvenida.AutoSize = true;
+            lblBienvenida.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblBienvenida.ForeColor = SystemColors.ControlText;
+            lblBienvenida.Location = new Point(30, 131);
+            lblBienvenida.Name = "lblBienvenida";
+            lblBienvenida.Size = new Size(110, 25);
+            lblBienvenida.TabIndex = 0;
+            lblBienvenida.Text = "Bienvenido:";
+            lblBienvenida.Click += lblBienvenida_Click;
             // 
             // btnCerrarSesion
             // 
-            this.btnCerrarSesion.Location = new System.Drawing.Point(22, 389);
-            this.btnCerrarSesion.Name = "btnCerrarSesion";
-            this.btnCerrarSesion.Size = new System.Drawing.Size(154, 23);
-            this.btnCerrarSesion.TabIndex = 1;
-            this.btnCerrarSesion.Text = "Cerrar sesión";
-            this.btnCerrarSesion.UseVisualStyleBackColor = true;
-            this.btnCerrarSesion.Click += new System.EventHandler(this.btnCerrarSesion_Click);
+            btnCerrarSesion.BackColor = Color.LightGray;
+            btnCerrarSesion.Cursor = Cursors.Hand;
+            btnCerrarSesion.FlatAppearance.BorderSize = 0;
+            btnCerrarSesion.FlatStyle = FlatStyle.Flat;
+            btnCerrarSesion.Location = new Point(30, 643);
+            btnCerrarSesion.Margin = new Padding(3, 4, 3, 4);
+            btnCerrarSesion.Name = "btnCerrarSesion";
+            btnCerrarSesion.Size = new Size(219, 45);
+            btnCerrarSesion.TabIndex = 1;
+            btnCerrarSesion.Text = "Cerrar sesión";
+            btnCerrarSesion.UseVisualStyleBackColor = false;
+            btnCerrarSesion.Click += btnCerrarSesion_Click;
             // 
             // btnGestionarUsuarios
             // 
-            this.btnGestionarUsuarios.Location = new System.Drawing.Point(28, 138);
-            this.btnGestionarUsuarios.Name = "btnGestionarUsuarios";
-            this.btnGestionarUsuarios.Size = new System.Drawing.Size(203, 23);
-            this.btnGestionarUsuarios.TabIndex = 2;
-            this.btnGestionarUsuarios.Text = "Gestionar Usuarios";
-            this.btnGestionarUsuarios.UseVisualStyleBackColor = true;
-            this.btnGestionarUsuarios.Click += new System.EventHandler(this.btnGestionarUsuarios_Click);
+            btnGestionarUsuarios.BackColor = Color.LightGray;
+            btnGestionarUsuarios.Cursor = Cursors.Hand;
+            btnGestionarUsuarios.FlatAppearance.BorderSize = 0;
+            btnGestionarUsuarios.FlatStyle = FlatStyle.Flat;
+            btnGestionarUsuarios.Location = new Point(30, 244);
+            btnGestionarUsuarios.Margin = new Padding(3, 4, 3, 4);
+            btnGestionarUsuarios.Name = "btnGestionarUsuarios";
+            btnGestionarUsuarios.Size = new Size(219, 45);
+            btnGestionarUsuarios.TabIndex = 2;
+            btnGestionarUsuarios.Text = "Gestionar Usuarios";
+            btnGestionarUsuarios.UseVisualStyleBackColor = false;
+            btnGestionarUsuarios.Click += btnGestionarUsuarios_Click;
             // 
             // btnGestionarChoferes
             // 
-            this.btnGestionarChoferes.Location = new System.Drawing.Point(28, 202);
-            this.btnGestionarChoferes.Name = "btnGestionarChoferes";
-            this.btnGestionarChoferes.Size = new System.Drawing.Size(194, 23);
-            this.btnGestionarChoferes.TabIndex = 3;
-            this.btnGestionarChoferes.Text = "Gestionar Choferes";
-            this.btnGestionarChoferes.UseVisualStyleBackColor = true;
-            this.btnGestionarChoferes.Click += new System.EventHandler(this.btnGestionarChoferes_Click);
+            btnGestionarChoferes.BackColor = Color.LightGray;
+            btnGestionarChoferes.Cursor = Cursors.Hand;
+            btnGestionarChoferes.FlatAppearance.BorderSize = 0;
+            btnGestionarChoferes.FlatStyle = FlatStyle.Flat;
+            btnGestionarChoferes.Location = new Point(30, 297);
+            btnGestionarChoferes.Margin = new Padding(3, 4, 3, 4);
+            btnGestionarChoferes.Name = "btnGestionarChoferes";
+            btnGestionarChoferes.Size = new Size(219, 45);
+            btnGestionarChoferes.TabIndex = 3;
+            btnGestionarChoferes.Text = "Gestionar Choferes";
+            btnGestionarChoferes.UseVisualStyleBackColor = false;
+            btnGestionarChoferes.Click += btnGestionarChoferes_Click;
             // 
             // btnGestionarVehiculos
             // 
-            this.btnGestionarVehiculos.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnGestionarVehiculos.Location = new System.Drawing.Point(28, 265);
-            this.btnGestionarVehiculos.Name = "btnGestionarVehiculos";
-            this.btnGestionarVehiculos.Size = new System.Drawing.Size(188, 40);
-            this.btnGestionarVehiculos.TabIndex = 4;
-            this.btnGestionarVehiculos.Text = "Gestionar Vehículos";
-            this.btnGestionarVehiculos.UseVisualStyleBackColor = true;
-            this.btnGestionarVehiculos.Click += new System.EventHandler(this.btnGestionarVehiculos_Click);
+            btnGestionarVehiculos.BackColor = Color.LightGray;
+            btnGestionarVehiculos.Cursor = Cursors.Hand;
+            btnGestionarVehiculos.FlatAppearance.BorderSize = 0;
+            btnGestionarVehiculos.FlatStyle = FlatStyle.Flat;
+            btnGestionarVehiculos.Font = new Font("Segoe UI", 10F);
+            btnGestionarVehiculos.Location = new Point(30, 509);
+            btnGestionarVehiculos.Margin = new Padding(3, 4, 3, 4);
+            btnGestionarVehiculos.Name = "btnGestionarVehiculos";
+            btnGestionarVehiculos.Size = new Size(219, 45);
+            btnGestionarVehiculos.TabIndex = 4;
+            btnGestionarVehiculos.Text = "Gestionar Vehículos";
+            btnGestionarVehiculos.UseVisualStyleBackColor = false;
+            btnGestionarVehiculos.Click += btnGestionarVehiculos_Click;
             // 
             // BtnPedidos
             // 
-            this.BtnPedidos.Location = new System.Drawing.Point(39, 330);
-            this.BtnPedidos.Name = "BtnPedidos";
-            this.BtnPedidos.Size = new System.Drawing.Size(177, 23);
-            this.BtnPedidos.TabIndex = 5;
-            this.BtnPedidos.Text = "Gestionar Pedido";
-            this.BtnPedidos.UseVisualStyleBackColor = true;
-            this.BtnPedidos.Click += new System.EventHandler(this.BtnPedidos_Click);
+            BtnPedidos.BackColor = Color.LightGray;
+            BtnPedidos.Cursor = Cursors.Hand;
+            BtnPedidos.FlatAppearance.BorderSize = 0;
+            BtnPedidos.FlatStyle = FlatStyle.Flat;
+            BtnPedidos.Location = new Point(30, 349);
+            BtnPedidos.Margin = new Padding(3, 4, 3, 4);
+            BtnPedidos.Name = "BtnPedidos";
+            BtnPedidos.Size = new Size(219, 45);
+            BtnPedidos.TabIndex = 5;
+            BtnPedidos.Text = "Gestionar Pedido";
+            BtnPedidos.UseVisualStyleBackColor = false;
+            BtnPedidos.Click += BtnPedidos_Click;
             // 
             // BtnHistorial
             // 
-            this.BtnHistorial.Location = new System.Drawing.Point(39, 79);
-            this.BtnHistorial.Name = "BtnHistorial";
-            this.BtnHistorial.Size = new System.Drawing.Size(143, 23);
-            this.BtnHistorial.TabIndex = 6;
-            this.BtnHistorial.Text = "Historial";
-            this.BtnHistorial.UseVisualStyleBackColor = true;
-            this.BtnHistorial.Click += new System.EventHandler(this.BtnHistorial_Click);
+            BtnHistorial.BackColor = Color.LightGray;
+            BtnHistorial.Cursor = Cursors.Hand;
+            BtnHistorial.FlatAppearance.BorderSize = 0;
+            BtnHistorial.FlatStyle = FlatStyle.Flat;
+            BtnHistorial.ForeColor = Color.Black;
+            BtnHistorial.Location = new Point(30, 191);
+            BtnHistorial.Margin = new Padding(3, 4, 3, 4);
+            BtnHistorial.Name = "BtnHistorial";
+            BtnHistorial.Size = new Size(219, 45);
+            BtnHistorial.TabIndex = 6;
+            BtnHistorial.Text = "Historial";
+            BtnHistorial.UseVisualStyleBackColor = false;
+            BtnHistorial.Click += BtnHistorial_Click;
             // 
             // btnInformeEstadistico
             // 
-            this.btnInformeEstadistico.Location = new System.Drawing.Point(355, 85);
-            this.btnInformeEstadistico.Name = "btnInformeEstadistico";
-            this.btnInformeEstadistico.Size = new System.Drawing.Size(157, 23);
-            this.btnInformeEstadistico.TabIndex = 7;
-            this.btnInformeEstadistico.Text = "Informe Estadístico";
-            this.btnInformeEstadistico.UseVisualStyleBackColor = true;
-            this.btnInformeEstadistico.Click += new System.EventHandler(this.btnInformeEstadistico_Click);
+            btnInformeEstadistico.BackColor = Color.LightGray;
+            btnInformeEstadistico.Cursor = Cursors.Hand;
+            btnInformeEstadistico.FlatAppearance.BorderSize = 0;
+            btnInformeEstadistico.FlatStyle = FlatStyle.Flat;
+            btnInformeEstadistico.Location = new Point(30, 403);
+            btnInformeEstadistico.Margin = new Padding(3, 4, 3, 4);
+            btnInformeEstadistico.Name = "btnInformeEstadistico";
+            btnInformeEstadistico.Size = new Size(219, 45);
+            btnInformeEstadistico.TabIndex = 7;
+            btnInformeEstadistico.Text = "Informe Estadístico";
+            btnInformeEstadistico.UseVisualStyleBackColor = false;
+            btnInformeEstadistico.Click += btnInformeEstadistico_Click;
             // 
             // btnSucursales
             // 
-            this.btnSucursales.Location = new System.Drawing.Point(356, 148);
-            this.btnSucursales.Name = "btnSucursales";
-            this.btnSucursales.Size = new System.Drawing.Size(150, 30);
-            this.btnSucursales.TabIndex = 8;
-            this.btnSucursales.Text = "Gestionar Sucursales";
-            this.btnSucursales.UseVisualStyleBackColor = true;
-            this.btnSucursales.Click += new System.EventHandler(this.btnSucursales_Click);
+            btnSucursales.BackColor = Color.LightGray;
+            btnSucursales.Cursor = Cursors.Hand;
+            btnSucursales.FlatAppearance.BorderSize = 0;
+            btnSucursales.FlatStyle = FlatStyle.Flat;
+            btnSucursales.Location = new Point(30, 456);
+            btnSucursales.Margin = new Padding(3, 4, 3, 4);
+            btnSucursales.Name = "btnSucursales";
+            btnSucursales.Size = new Size(219, 45);
+            btnSucursales.TabIndex = 8;
+            btnSucursales.Text = "Gestionar Sucursales";
+            btnSucursales.UseVisualStyleBackColor = false;
+            btnSucursales.Click += btnSucursales_Click;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.Transparent;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(30, 20);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(110, 91);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 9;
+            pictureBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label1.Location = new Point(6, 48);
+            label1.Name = "label1";
+            label1.Size = new Size(482, 572);
+            label1.TabIndex = 10;
+            label1.Text = resources.GetString("label1.Text");
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(label1);
+            groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox1.Location = new Point(283, 175);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(481, 513);
+            groupBox1.TabIndex = 12;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Manual de Administrador";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(211, 47);
+            label2.Name = "label2";
+            label2.Size = new Size(244, 30);
+            label2.TabIndex = 11;
+            label2.Text = "Panel de Administrador";
             // 
             // FormAdministrador
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.btnSucursales);
-            this.Controls.Add(this.btnInformeEstadistico);
-            this.Controls.Add(this.BtnHistorial);
-            this.Controls.Add(this.BtnPedidos);
-            this.Controls.Add(this.btnGestionarVehiculos);
-            this.Controls.Add(this.btnGestionarChoferes);
-            this.Controls.Add(this.btnGestionarUsuarios);
-            this.Controls.Add(this.btnCerrarSesion);
-            this.Controls.Add(this.lblBienvenida);
-            this.Name = "FormAdministrador";
-            this.Text = "Administrador";
-            this.Load += new System.EventHandler(this.FormAdministrador_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.DarkGray;
+            ClientSize = new Size(780, 716);
+            Controls.Add(groupBox1);
+            Controls.Add(label2);
+            Controls.Add(pictureBox1);
+            Controls.Add(btnSucursales);
+            Controls.Add(btnInformeEstadistico);
+            Controls.Add(BtnHistorial);
+            Controls.Add(BtnPedidos);
+            Controls.Add(btnGestionarVehiculos);
+            Controls.Add(btnGestionarChoferes);
+            Controls.Add(btnGestionarUsuarios);
+            Controls.Add(btnCerrarSesion);
+            Controls.Add(lblBienvenida);
+            Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "FormAdministrador";
+            Text = "Panel de Administrador";
+            Load += FormAdministrador_Load;
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            groupBox1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -149,5 +251,9 @@
         private Button BtnHistorial;
         private Button btnInformeEstadistico;
         private Button btnSucursales;
+        private PictureBox pictureBox1;
+        private Label label1;
+        private GroupBox groupBox1;
+        private Label label2;
     }
 }

@@ -17,7 +17,7 @@ namespace GestionViajes.Desktop
         public FormAdministrador()
         {
             InitializeComponent();
-            
+
 
         }
 
@@ -34,7 +34,7 @@ namespace GestionViajes.Desktop
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            
+
             this.Hide();   // Usamos Hide() para NO generar eventos de cierre duplicados
             this.Dispose();
 
@@ -75,5 +75,9 @@ namespace GestionViajes.Desktop
             new FormSucursales().Show();
         }
 
+        private void lblBienvenida_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

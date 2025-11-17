@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,9 +18,9 @@ namespace GestionViajes.Desktop
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtUsuario.Text) ||
-               string.IsNullOrWhiteSpace(txtContraseÒa.Text))
+               string.IsNullOrWhiteSpace(txtContrase√±a.Text))
             {
-                MessageBox.Show("Por favor, complet· todos los campos.", "Campos vacÌos",
+                MessageBox.Show("Por favor, complet√° todos los campos.", "Campos vac√≠os",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -28,7 +28,7 @@ namespace GestionViajes.Desktop
             var loginData = new
             {
                 Usuario = txtUsuario.Text,
-                ContraseÒa = txtContraseÒa.Text
+                Contrase√±a = txtContrase√±a.Text
             };
 
             try
@@ -39,10 +39,11 @@ namespace GestionViajes.Desktop
                 using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
                 var response = await client.PostAsync("/api/Login", content);
 
+                // ‚ùå Usuario incorrecto
                 if (!response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Usuario o contraseÒa incorrectos.",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Usuario o contrase√±a incorrectos.",
+                        "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -55,14 +56,22 @@ namespace GestionViajes.Desktop
                     return;
                 }
 
+                // ‚úîÔ∏è Usuario v√°lido ‚Üí mensaje de bienvenida
+                MessageBox.Show(
+                    $"Bienvenido {result.Nombre} ({result.Rol})",
+                    "Inicio de sesi√≥n exitoso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+
                 // ======= LOGIN DE ADMIN =======
                 if (result.Rol == "Administrador")
                 {
                     using (var formAdmin = new FormAdministrador(result.Nombre))
                     {
-                        this.Hide();    // oculto login
-                        formAdmin.ShowDialog(); // modal
-                        this.Show();    // muestro login cuando vuelve
+                        this.Hide();
+                        formAdmin.ShowDialog();
+                        this.Show();
                     }
                     return;
                 }
@@ -72,8 +81,8 @@ namespace GestionViajes.Desktop
                 {
                     if (result.ChoferId == null || result.ChoferId == 0)
                     {
-                        MessageBox.Show("Este usuario no est· asignado a ning˙n chofer.\n" +
-                            "Asign· un Chofer desde FormUsuarios.",
+                        MessageBox.Show("Este usuario no est√° asignado a ning√∫n chofer.\n" +
+                            "Asign√° un Chofer desde FormUsuarios.",
                             "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
@@ -87,13 +96,14 @@ namespace GestionViajes.Desktop
                     return;
                 }
 
-                MessageBox.Show("Rol no reconocido. Contact· al administrador.");
+                MessageBox.Show("Rol no reconocido. Contact√° al administrador.");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error inesperado: {ex.Message}");
             }
         }
+
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
