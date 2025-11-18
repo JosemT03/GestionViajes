@@ -1,14 +1,8 @@
-<p align="center">
-  <img src="img/banner.png" width="800">
-</p>
 
 # 🚛 Sistema de Gestión de Viajes
 
 Repositorio oficial del proyecto **Gestión de Viajes**, desarrollado en **C#**, **Windows Forms**, **ASP.NET Core Web API** y **SQL Server**.  
 El objetivo del sistema es administrar viajes, pedidos, choferes, vehículos y sucursales de una empresa de transporte.
-
-📌 **Repositorio:**  
-https://github.com/JosemT03/GestionViajes.git
 
 ---
 
@@ -98,8 +92,44 @@ Patrones utilizados:
 
 ---
 
+## 📌 Funcionalidades Principales
+
+### ✔ Módulo de Autenticación
+- Login conectado a Web API  
+- Validación de credenciales  
+- Redirección por rol (Administrador / Chofer)
+
+### ✔ Módulo de Administración
+- ABM de usuarios  
+- ABM de choferes  
+- ABM de sucursales  
+- ABM de vehículos  
+- ABM de pedidos  
+
+### ✔ Gestión de Pedidos
+- Crear pedidos  
+- Asignar chofer y vehículo  
+- Cambiar estado del viaje  
+- Registrar en historial  
+
+### ✔ Informes
+- Informe estadístico general  
+- Choferes activos  
+- Vehículos disponibles  
+- Pedidos por sucursal
+
+---
+
 👤 Autor
 
 José Taboada
 Desarrollador – Proyecto Gestión de Viajes
 C# | .NET | SQL Server | Windows Forms | Web API
+
+## 🧪 Cómo ejecutar el proyecto
+
+### 1. Cloná el repositorio
+
+```bash
+git clone https://github.com/JosemT03/GestionViajes.git
+
