@@ -237,6 +237,7 @@
             Controls.Add(pictureBox1);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "FormAgregarEditarVehiculo";
             Text = "FormAgregarEditarVehiculo";
             Load += FormAgregarEditarVehiculo_Load;
