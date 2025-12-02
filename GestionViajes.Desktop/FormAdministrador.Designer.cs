@@ -30,6 +30,7 @@
             label1 = new Label();
             groupBox1 = new GroupBox();
             label2 = new Label();
+            btnChatBot = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -193,7 +194,7 @@
             // 
             groupBox1.Controls.Add(label1);
             groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox1.Location = new Point(283, 175);
+            groupBox1.Location = new Point(287, 131);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(481, 513);
             groupBox1.TabIndex = 12;
@@ -210,12 +211,27 @@
             label2.TabIndex = 11;
             label2.Text = "Panel de Administrador";
             // 
+            // btnChatBot
+            // 
+            btnChatBot.BackColor = Color.LightGray;
+            btnChatBot.Cursor = Cursors.Hand;
+            btnChatBot.FlatAppearance.BorderSize = 0;
+            btnChatBot.FlatStyle = FlatStyle.Flat;
+            btnChatBot.Location = new Point(30, 561);
+            btnChatBot.Name = "btnChatBot";
+            btnChatBot.Size = new Size(219, 45);
+            btnChatBot.TabIndex = 13;
+            btnChatBot.Text = "Asistente IA";
+            btnChatBot.UseVisualStyleBackColor = false;
+            btnChatBot.Click += btnChatBot_Click;
+            // 
             // FormAdministrador
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkGray;
             ClientSize = new Size(780, 716);
+            Controls.Add(btnChatBot);
             Controls.Add(groupBox1);
             Controls.Add(label2);
             Controls.Add(pictureBox1);
@@ -255,5 +271,6 @@
         private Label label1;
         private GroupBox groupBox1;
         private Label label2;
+        private Button btnChatBot;
     }
 }

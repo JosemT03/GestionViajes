@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestionViajes.API.Controllers
-{ 
+{
     [ApiController]
     [Route("api/[controller]")]
     public class ChoferesController : ControllerBase
@@ -14,16 +14,53 @@ namespace GestionViajes.API.Controllers
         public ChoferesController(AppDbContext context)
         {
             _context = context;
-        }
+        } 
 
         // GET: api/Choferes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Chofer>>> GetChoferes()
         {
             return await _context.Choferes
-         .Include(c => c.Usuario)  // ← importante
-         .ToListAsync();
+                .Include(c => c.Usuario)
+                .ToListAsync();
+        }
 
+        // ========================================================
+        // GET: api/Choferes/Disponibles/Cantidad
+        // ========================================================
+        [HttpGet("Disponibles/Cantidad")]
+        public async Task<ActionResult<int>> GetChoferesDisponibles()
+        {
+            int cantidad = await _context.Choferes
+                .Where(c => c.Disponible == true)
+                .CountAsync();
+
+            return Ok(cantidad);
+        }
+
+        // ========================================================
+        // GET: api/Choferes/Mejor
+        // ========================================================
+        [HttpGet("Mejor")]
+        public async Task<ActionResult<string>> GetMejorChofer()
+        {
+            var mejor = await _context.Pedidos
+                .Where(p => p.Estado == "Completado" && p.ChoferId != null)
+                .GroupBy(p => p.ChoferId)
+                .Select(g => new
+                {
+                    ChoferId = g.Key,
+                    Cantidad = g.Count()
+                })
+                .OrderByDescending(x => x.Cantidad)
+                .FirstOrDefaultAsync();
+
+            if (mejor == null)
+                return Ok("No hay suficientes datos para determinar al mejor chofer.");
+
+            var chofer = await _context.Choferes.FindAsync(mejor.ChoferId);
+
+            return Ok($"{chofer.NombreCompleto} con {mejor.Cantidad} viajes completados.");
         }
 
         // GET: api/Choferes/5
@@ -52,7 +89,6 @@ namespace GestionViajes.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutChofer(int id, Chofer chofer)
         {
-            // Validación básica
             if (id != chofer.Id)
                 return BadRequest();
 

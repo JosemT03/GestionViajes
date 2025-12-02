@@ -23,29 +23,57 @@ namespace GestionViajes.API.Controllers
         public async Task<ActionResult<IEnumerable<dynamic>>> GetPedidos()
         {
             var pedidos = await _context.Pedidos
-         .Include(p => p.Chofer)
-         .Include(p => p.Vehiculo)
-         .Include(p => p.Sucursal)
-         .Select(p => new
-         {
-             id = p.Id,
-             numeroPedido = p.NumeroPedido,
-             fechaEntrega = p.FechaEntrega,
-             estado = p.Estado,
+                .Include(p => p.Chofer)
+                .Include(p => p.Vehiculo)
+                .Include(p => p.Sucursal)
+                .Select(p => new
+                {
+                    id = p.Id,
+                    numeroPedido = p.NumeroPedido,
+                    fechaEntrega = p.FechaEntrega,
+                    estado = p.Estado,
 
-             choferId = p.ChoferId,
-             chofer = p.Chofer != null ? p.Chofer.NombreCompleto : "Sin asignar",
+                    choferId = p.ChoferId,
+                    chofer = p.Chofer != null ? p.Chofer.NombreCompleto : "Sin asignar",
 
-             vehiculoId = p.VehiculoId,
-             vehiculo = p.Vehiculo != null ? p.Vehiculo.Patente : "Sin asignar",
+                    vehiculoId = p.VehiculoId,
+                    vehiculo = p.Vehiculo != null ? p.Vehiculo.Patente : "Sin asignar",
 
-             sucursalId = p.SucursalId,
-             sucursal = p.Sucursal != null ? p.Sucursal.Nombre : "Sin asignar",
-             provincia = p.Sucursal != null ? p.Sucursal.Provincia : "Sin asignar"
-         })
-         .ToListAsync();
+                    sucursalId = p.SucursalId,
+                    sucursal = p.Sucursal != null ? p.Sucursal.Nombre : "Sin asignar",
+                    provincia = p.Sucursal != null ? p.Sucursal.Provincia : "Sin asignar"
+                })
+                .ToListAsync();
 
             return Ok(pedidos);
+        }
+
+        // ========================================================
+        // GET: api/Pedidos/Hoy/Cantidad
+        // ========================================================
+        [HttpGet("Hoy/Cantidad")]
+        public async Task<ActionResult<int>> GetCantidadPedidosHoy()
+        {
+            var hoy = DateTime.Today;
+
+            int cantidad = await _context.Pedidos
+                .Where(p => p.FechaEntrega.Date == hoy)
+                .CountAsync();
+
+            return Ok(cantidad);
+        }
+
+        // ========================================================
+        // GET: api/Pedidos/Pendientes/Cantidad
+        // ========================================================
+        [HttpGet("Pendientes/Cantidad")]
+        public async Task<ActionResult<int>> GetPedidosPendientes()
+        {
+            int cantidad = await _context.Pedidos
+                .Where(p => p.Estado == "Pendiente")
+                .CountAsync();
+
+            return Ok(cantidad);
         }
 
         // ========================================================
@@ -64,7 +92,6 @@ namespace GestionViajes.API.Controllers
 
         // ========================================================
         // POST: api/Pedidos  
-        // (solo acepta SucursalId, NO provincia texto)
         // ========================================================
         [HttpPost]
         public async Task<ActionResult<Pedido>> PostPedido(Pedido pedido)

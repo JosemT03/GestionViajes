@@ -79,5 +79,11 @@ namespace GestionViajes.Desktop
         {
 
         }
+
+        private void btnChatBot_Click(object sender, EventArgs e)
+        {
+            var form = new FormChatBot();
+            form.ShowDialog();
+        }
     }
 }

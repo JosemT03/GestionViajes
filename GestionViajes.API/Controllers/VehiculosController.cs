@@ -23,6 +23,19 @@ namespace GestionViajes.API.Controllers
             return await _context.Vehiculos.ToListAsync();
         }
 
+        // ========================================================
+        // GET: api/Vehiculos/Disponibles/Cantidad
+        // ========================================================
+        [HttpGet("Disponibles/Cantidad")]
+        public async Task<ActionResult<int>> GetVehiculosDisponibles()
+        {
+            int cantidad = await _context.Vehiculos
+                .Where(v => v.Disponible == true)
+                .CountAsync();
+
+            return Ok(cantidad);
+        }
+
         // GET: api/Vehiculos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Vehiculo>> GetVehiculo(int id)
@@ -89,6 +102,5 @@ namespace GestionViajes.API.Controllers
 
             return NoContent();
         }
-
     }
 }
