@@ -16,6 +16,7 @@
 
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAdministrador));
             lblBienvenida = new Label();
             btnCerrarSesion = new Button();
@@ -27,12 +28,26 @@
             btnInformeEstadistico = new Button();
             btnSucursales = new Button();
             pictureBox1 = new PictureBox();
-            label1 = new Label();
-            groupBox1 = new GroupBox();
             label2 = new Label();
             btnChatBot = new Button();
+            panelInfo = new Panel();
+            lblMejorChofer = new Label();
+            lblPedidosHoy = new Label();
+            lblPedidosPend = new Label();
+            lblChoferes = new Label();
+            lblVehiculos = new Label();
+            lblTituloInfo = new Label();
+            timerInfo = new System.Windows.Forms.Timer(components);
+            panelUsuario = new Panel();
+            lblUltimoAcceso = new Label();
+            lblRolUsuario = new Label();
+            lblNombreUsuario = new Label();
+            lblUsuarioTitulo = new Label();
+            picUsuario = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            groupBox1.SuspendLayout();
+            panelInfo.SuspendLayout();
+            panelUsuario.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picUsuario).BeginInit();
             SuspendLayout();
             // 
             // lblBienvenida
@@ -180,27 +195,6 @@
             pictureBox1.TabIndex = 9;
             pictureBox1.TabStop = false;
             // 
-            // label1
-            // 
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(6, 48);
-            label1.Name = "label1";
-            label1.Size = new Size(482, 572);
-            label1.TabIndex = 10;
-            label1.Text = resources.GetString("label1.Text");
-            // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(label1);
-            groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox1.Location = new Point(287, 131);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(481, 513);
-            groupBox1.TabIndex = 12;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Manual de Administrador";
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -225,14 +219,152 @@
             btnChatBot.UseVisualStyleBackColor = false;
             btnChatBot.Click += btnChatBot_Click;
             // 
+            // panelInfo
+            // 
+            panelInfo.BackColor = Color.LightGray;
+            panelInfo.BorderStyle = BorderStyle.FixedSingle;
+            panelInfo.Controls.Add(lblMejorChofer);
+            panelInfo.Controls.Add(lblPedidosHoy);
+            panelInfo.Controls.Add(lblPedidosPend);
+            panelInfo.Controls.Add(lblChoferes);
+            panelInfo.Controls.Add(lblVehiculos);
+            panelInfo.Controls.Add(lblTituloInfo);
+            panelInfo.Location = new Point(285, 191);
+            panelInfo.Name = "panelInfo";
+            panelInfo.Size = new Size(420, 260);
+            panelInfo.TabIndex = 14;
+            // 
+            // lblMejorChofer
+            // 
+            lblMejorChofer.AutoSize = true;
+            lblMejorChofer.Location = new Point(26, 159);
+            lblMejorChofer.Name = "lblMejorChofer";
+            lblMejorChofer.Size = new Size(99, 20);
+            lblMejorChofer.TabIndex = 5;
+            lblMejorChofer.Text = "Mejor Chofer:";
+            // 
+            // lblPedidosHoy
+            // 
+            lblPedidosHoy.AutoSize = true;
+            lblPedidosHoy.Location = new Point(22, 132);
+            lblPedidosHoy.Name = "lblPedidosHoy";
+            lblPedidosHoy.Size = new Size(116, 20);
+            lblPedidosHoy.TabIndex = 4;
+            lblPedidosHoy.Text = "Pedidos de Hoy:";
+            // 
+            // lblPedidosPend
+            // 
+            lblPedidosPend.AutoSize = true;
+            lblPedidosPend.Location = new Point(18, 105);
+            lblPedidosPend.Name = "lblPedidosPend";
+            lblPedidosPend.Size = new Size(141, 20);
+            lblPedidosPend.TabIndex = 3;
+            lblPedidosPend.Text = "Pedidos pendientes:";
+            // 
+            // lblChoferes
+            // 
+            lblChoferes.AutoSize = true;
+            lblChoferes.Location = new Point(18, 77);
+            lblChoferes.Name = "lblChoferes";
+            lblChoferes.Size = new Size(150, 20);
+            lblChoferes.TabIndex = 2;
+            lblChoferes.Text = "Choferes disponibles:";
+            // 
+            // lblVehiculos
+            // 
+            lblVehiculos.AutoSize = true;
+            lblVehiculos.Location = new Point(18, 49);
+            lblVehiculos.Name = "lblVehiculos";
+            lblVehiculos.Size = new Size(154, 20);
+            lblVehiculos.TabIndex = 1;
+            lblVehiculos.Text = "Vehículos disponibles:";
+            // 
+            // lblTituloInfo
+            // 
+            lblTituloInfo.AutoSize = true;
+            lblTituloInfo.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloInfo.Location = new Point(3, 7);
+            lblTituloInfo.Name = "lblTituloInfo";
+            lblTituloInfo.Size = new Size(250, 25);
+            lblTituloInfo.TabIndex = 0;
+            lblTituloInfo.Text = "Estado General del Sistema";
+            // 
+            // timerInfo
+            // 
+            timerInfo.Enabled = true;
+            timerInfo.Interval = 10000;
+            timerInfo.Tick += timerInfo_Tick;
+            // 
+            // panelUsuario
+            // 
+            panelUsuario.BackColor = Color.LightGray;
+            panelUsuario.BorderStyle = BorderStyle.FixedSingle;
+            panelUsuario.Controls.Add(lblUltimoAcceso);
+            panelUsuario.Controls.Add(lblRolUsuario);
+            panelUsuario.Controls.Add(lblNombreUsuario);
+            panelUsuario.Controls.Add(lblUsuarioTitulo);
+            panelUsuario.Controls.Add(picUsuario);
+            panelUsuario.Location = new Point(285, 469);
+            panelUsuario.Name = "panelUsuario";
+            panelUsuario.Size = new Size(420, 130);
+            panelUsuario.TabIndex = 15;
+            // 
+            // lblUltimoAcceso
+            // 
+            lblUltimoAcceso.AutoSize = true;
+            lblUltimoAcceso.Location = new Point(128, 103);
+            lblUltimoAcceso.Name = "lblUltimoAcceso";
+            lblUltimoAcceso.Size = new Size(106, 20);
+            lblUltimoAcceso.TabIndex = 4;
+            lblUltimoAcceso.Text = "Ultimo acceso:";
+            // 
+            // lblRolUsuario
+            // 
+            lblRolUsuario.AutoSize = true;
+            lblRolUsuario.Location = new Point(128, 73);
+            lblRolUsuario.Name = "lblRolUsuario";
+            lblRolUsuario.Size = new Size(34, 20);
+            lblRolUsuario.TabIndex = 3;
+            lblRolUsuario.Text = "Rol:";
+            // 
+            // lblNombreUsuario
+            // 
+            lblNombreUsuario.AutoSize = true;
+            lblNombreUsuario.Location = new Point(128, 41);
+            lblNombreUsuario.Name = "lblNombreUsuario";
+            lblNombreUsuario.Size = new Size(67, 20);
+            lblNombreUsuario.TabIndex = 2;
+            lblNombreUsuario.Text = "Nombre:";
+            // 
+            // lblUsuarioTitulo
+            // 
+            lblUsuarioTitulo.AutoSize = true;
+            lblUsuarioTitulo.Location = new Point(128, 11);
+            lblUsuarioTitulo.Name = "lblUsuarioTitulo";
+            lblUsuarioTitulo.Size = new Size(133, 20);
+            lblUsuarioTitulo.TabIndex = 1;
+            lblUsuarioTitulo.Text = "Usuario conectado";
+            // 
+            // picUsuario
+            // 
+            picUsuario.BackColor = Color.Transparent;
+            picUsuario.Image = (Image)resources.GetObject("picUsuario.Image");
+            picUsuario.Location = new Point(11, 11);
+            picUsuario.Name = "picUsuario";
+            picUsuario.Size = new Size(100, 50);
+            picUsuario.SizeMode = PictureBoxSizeMode.Zoom;
+            picUsuario.TabIndex = 0;
+            picUsuario.TabStop = false;
+            // 
             // FormAdministrador
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkGray;
             ClientSize = new Size(780, 716);
+            Controls.Add(panelUsuario);
+            Controls.Add(panelInfo);
             Controls.Add(btnChatBot);
-            Controls.Add(groupBox1);
             Controls.Add(label2);
             Controls.Add(pictureBox1);
             Controls.Add(btnSucursales);
@@ -245,13 +377,17 @@
             Controls.Add(btnCerrarSesion);
             Controls.Add(lblBienvenida);
             Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(3, 4, 3, 4);
             Name = "FormAdministrador";
             Text = "Panel de Administrador";
             Load += FormAdministrador_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            groupBox1.ResumeLayout(false);
+            panelInfo.ResumeLayout(false);
+            panelInfo.PerformLayout();
+            panelUsuario.ResumeLayout(false);
+            panelUsuario.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picUsuario).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -268,9 +404,21 @@
         private Button btnInformeEstadistico;
         private Button btnSucursales;
         private PictureBox pictureBox1;
-        private Label label1;
-        private GroupBox groupBox1;
         private Label label2;
         private Button btnChatBot;
+        private Panel panelInfo;
+        private Label lblTituloInfo;
+        private Label lblPedidosHoy;
+        private Label lblPedidosPend;
+        private Label lblChoferes;
+        private Label lblVehiculos;
+        private Label lblMejorChofer;
+        private System.Windows.Forms.Timer timerInfo;
+        private Panel panelUsuario;
+        private PictureBox picUsuario;
+        private Label lblUltimoAcceso;
+        private Label lblRolUsuario;
+        private Label lblNombreUsuario;
+        private Label lblUsuarioTitulo;
     }
 }

@@ -14,6 +14,8 @@ namespace GestionViajes.Desktop
     public partial class FormAdministrador : Form
     {
         private string _nombreAdmin;
+        private readonly HttpClient http = new HttpClient { BaseAddress = new Uri("https://localhost:7083") };
+
         public FormAdministrador()
         {
             InitializeComponent();
@@ -27,9 +29,11 @@ namespace GestionViajes.Desktop
             lblBienvenida.Text = $"Bienvenido, {_nombreAdmin}";
         }
 
-        private void FormAdministrador_Load(object sender, EventArgs e)
+        private async void FormAdministrador_Load(object sender, EventArgs e)
         {
             // TODO: Cargar datos iniciales si es necesario
+            await ActualizarPanelInfo();
+            CargarTarjetaUsuario();
         }
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
@@ -85,5 +89,78 @@ namespace GestionViajes.Desktop
             var form = new FormChatBot();
             form.ShowDialog();
         }
+
+        private async Task ActualizarPanelInfo()
+        {
+            try
+            {
+                // Vehículos disponibles
+                var veh = await http.GetAsync("/api/Vehiculos/Disponibles/Cantidad");
+                lblVehiculos.Text = "🚚 Vehículos disponibles: " +
+                                    (veh.IsSuccessStatusCode ? await veh.Content.ReadAsStringAsync() : "-");
+
+                // Choferes disponibles
+                var cho = await http.GetAsync("/api/Choferes/Disponibles/Cantidad");
+                lblChoferes.Text = "👷 Choferes disponibles: " +
+                                   (cho.IsSuccessStatusCode ? await cho.Content.ReadAsStringAsync() : "-");
+
+                // Pedidos pendientes
+                var pen = await http.GetAsync("/api/Pedidos/Pendientes/Cantidad");
+                lblPedidosPend.Text = "📦 Pedidos pendientes: " +
+                                      (pen.IsSuccessStatusCode ? await pen.Content.ReadAsStringAsync() : "-");
+
+                // Pedidos de hoy
+                var hoy = await http.GetAsync("/api/Pedidos/Hoy/Cantidad");
+                lblPedidosHoy.Text = "📅 Pedidos de hoy: " +
+                                     (hoy.IsSuccessStatusCode ? await hoy.Content.ReadAsStringAsync() : "-");
+
+                // Mejor chofer
+                var mej = await http.GetAsync("/api/Choferes/Mejor");
+                lblMejorChofer.Text = "⭐ Mejor chofer: " +
+                                      (mej.IsSuccessStatusCode ? await mej.Content.ReadAsStringAsync() : "-");
+            }
+            catch
+            {
+                lblVehiculos.Text = "Error al conectar con API";
+                lblChoferes.Text = "Error al conectar con API";
+                lblPedidosPend.Text = "Error al conectar con API";
+                lblPedidosHoy.Text = "Error al conectar con API";
+                lblMejorChofer.Text = "Error al conectar con API";
+            }
+        }
+
+        private async void timerInfo_Tick(object sender, EventArgs e)
+        {
+            await ActualizarPanelInfo();
+        }
+
+        // ============================================================
+        // TARJETA DE USUARIO LOGUEADO
+        // ============================================================
+        private void CargarTarjetaUsuario()
+        {
+            // Si no vino nombre
+            if (string.IsNullOrEmpty(_nombreAdmin))
+            {
+                lblNombreUsuario.Text = "Nombre: -";
+                lblRolUsuario.Text = "Rol: Administrador";
+                lblUltimoAcceso.Text = "Último acceso: -";
+                return;
+            }
+
+            lblUsuarioTitulo.Text = "Usuario conectado";
+            lblNombreUsuario.Text = $"Nombre: {_nombreAdmin}";
+            lblRolUsuario.Text = "Rol: Administrador";
+            lblUltimoAcceso.Text = "Último acceso: " + DateTime.Now.ToString("HH:mm");
+
+            // Avatar por defecto
+            
+        }
+
+
+
+
+
+
     }
 }
